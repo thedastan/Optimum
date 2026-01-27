@@ -1,0 +1,50 @@
+@use "./reset";
+@use "./phone-input";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Inter, sans-serif;
+  @extend %unscroll;
+}
+
+.container {
+  width: 100%;
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+// .swiper-pagination {
+//   bottom: 0px !important; /* ближе к картинке */
+//   background: #000;
+// }
+
+.swiper-pagination-bullet.custom-dot {
+  width: 4px;
+  height: 4px;
+  background: #cfcfcf;
+  border-radius: 4px;
+  opacity: 0.5;
+  margin: 0 2px !important;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active.custom-dot {
+  width: 14px;
+  height: 4px;
+  background: #cfcfcf;
+  opacity: 1;
+}
+
+.swiper-pagination-bullet.custom-dot {
+  transform-origin: center;
+}
+
+.swiper-pagination-bullet.custom-dot:hover {
+  opacity: 0.8;
+}
