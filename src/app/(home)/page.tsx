@@ -2,10 +2,10 @@ import HomeComponents from "@/components/pages/home/HomeComponents";
 import { generateMetadata } from "@/lib/seo";
 
 export const metadata = generateMetadata({
-	title: "Asim_project",
-	description: "Asim_project",
-	url: "https://next-structure-seven.vercel.app/",
-	image: "/asim.png",
+  title: "Optimum",
+  description: "Optimum",
+  url: "https://next-structure-seven.vercel.app/",
+  image: "/image.png",
 });
 
 const Home = () => <HomeComponents />;

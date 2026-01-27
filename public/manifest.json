@@ -1,23 +1,23 @@
 {
-	"name": "Asim_project",
-	"short_name": "Asim_project",
-	"description": "",
-	"lang": "ru-RU",
-	"start_url": "/",
-	"scope": "/",
-	"display": "standalone",
-	"background_color": "#ffffff",
-	"theme_color": "#ffffff",
-	"icons": [
-		{
-			"src": "/asim.png",
-			"sizes": "512x512",
-			"type": "image/png"
-		},
-		{
-			"src": "/asim.png",
-			"sizes": "512x512",
-			"type": "image/png"
-		}
-	]
+  "name": "Optimum",
+  "short_name": "Optimum",
+  "description": "",
+  "lang": "ru-RU",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/image.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/image.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
