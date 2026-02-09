@@ -6,8 +6,8 @@ import Discount from "./discount/Discount";
 const HomeComponents = () => {
   return (
     <>
-      {/* <Brand /> */}
-      {/* <Discount /> */}
+      <Brand />
+      <Discount />
       <Card />
     </>
   );

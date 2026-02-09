@@ -5,7 +5,7 @@ import { TitleComponent } from "@/components/ui/text/TitleComponent";
 import { BsCart3 } from "react-icons/bs";
 
 import Image from "next/image";
-import React from "react";
+import React, { useMemo } from "react";
 
 import img2 from "@/assets/svg/card.svg";
 import img from "@/assets/svg/card2.svg";
@@ -20,206 +20,39 @@ import "swiper/css/pagination";
 import { IoArrowBackOutline, IoArrowForward } from "react-icons/io5";
 import { useProducts } from "@/redux/hooks/product";
 
-const data = [
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img2,
-      },
-      {
-        img: img,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    discount: 30,
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img2,
-      },
-      {
-        img: img,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    discount: 30,
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-];
+interface CatalogCardProps {
+  filters: {
+    selectedMarka: string | null;
+    selectedModel: string | null;
+    selectedKuzov: string | null;
+    selectedTypes: string[];
+  };
+}
 
-const Catalog_card = () => {
+const Catalog_card: React.FC<CatalogCardProps> = ({ filters }) => {
   const { data } = useProducts();
   console.log(data, "data data");
+
+  // Основная логика фильтрации
+  const filteredProducts = useMemo(() => {
+    if (!data) return [];
+    return data.filter((product) => {
+      const matchMarka =
+        !filters.selectedMarka ||
+        product.brand.brand_name === filters.selectedMarka;
+      const matchModel =
+        !filters.selectedModel ||
+        product.model.model_name === filters.selectedModel;
+      const matchKuzov =
+        !filters.selectedKuzov ||
+        product.body.type_name === filters.selectedKuzov;
+      const matchType =
+        filters.selectedTypes.length === 0 ||
+        filters.selectedTypes.includes(product.parts.spare_name);
+
+      return matchMarka && matchModel && matchKuzov && matchType;
+    });
+  }, [data, filters]);
 
   return (
     <section className="">
@@ -228,7 +61,7 @@ const Catalog_card = () => {
           <TitleComponent className="py-4">Похожие товары</TitleComponent>
           <div className="w-full flex flex-col gap-4">
             <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-[22px]">
-              {data?.map((el, i) => (
+              {filteredProducts?.map((el, i) => (
                 <div
                   key={i}
                   className="flex flex-col gap-[14px] h-full" // добавили h-full
@@ -302,37 +135,23 @@ const Catalog_card = () => {
                 </div>
               ))}
             </div>
-            <div className="w-full flex justify-between border-t py-4">
-              <Button className="md:!w-[110px] !w-[40px] flex items-center gap-1 !bg-white hover:!bg-black border rounded-lg !text-black hover:!text-white">
-                <IoArrowBackOutline size={18} />
-                <span className="hidden md:inline-flex">Previous</span>{" "}
-              </Button>
-
-              <div className="flex gap-1">
-                <h2 className="w-[40px] h-[40px] flex justify-center items-center rounded-md bg-[#FAFAFA]">
-                  1
-                </h2>
-                <h2 className="w-[40px] h-[40px] flex justify-center items-center rounded-md bg-[#FAFAFA]">
-                  2
-                </h2>
-                <h2 className="w-[40px] h-[40px] flex justify-center items-center rounded-md bg-[#FAFAFA]">
-                  3
-                </h2>
-                <h2 className="w-[40px] h-[40px] flex justify-center items-end">
-                  ...
-                </h2>
-                <h2 className="w-[40px] h-[40px] flex justify-center items-center rounded-md bg-[#FAFAFA]">
-                  8
-                </h2>
-                <h2 className="w-[40px] h-[40px] flex justify-center items-center rounded-md bg-[#FAFAFA]">
-                  9
-                </h2>
+            {filteredProducts.length > 0 && (
+              <div className="w-full flex justify-between border-t py-6 mt-4">
+                <Button className="md:!w-[110px] !bg-white hover:!bg-black border !text-black hover:!text-white">
+                  <IoArrowBackOutline size={18} />
+                  <span className="hidden md:inline">Previous</span>
+                </Button>
+                <div className="flex gap-1 items-center">
+                  <span className="px-4 py-2 bg-black text-white rounded-md">
+                    1
+                  </span>
+                </div>
+                <Button className="md:!w-[84px] !bg-white hover:!bg-black border !text-black hover:!text-white">
+                  <span className="hidden md:inline">Next</span>
+                  <IoArrowForward size={18} />
+                </Button>
               </div>
-              <Button className="md:!w-[84px] !w-[40px] flex items-center gap-1 !bg-white hover:!bg-black border rounded-lg !text-black hover:!text-white">
-                <span className="hidden md:inline-flex">Next</span>{" "}
-                <IoArrowForward size={18} />
-              </Button>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -111,8 +111,11 @@ const Brand = () => {
             </Description>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mt-[12px]">
-            {data.map((el) => (
-              <div className="md:w-[213px] w-[114px] h-[120px] border rounded-[8px] flex flex-col justify-center items-center gap-[8px]">
+            {data.map((el, index) => (
+              <div
+                key={index}
+                className="md:w-[213px] w-[114px] h-[120px] border rounded-[8px] flex flex-col justify-center items-center gap-[8px]"
+              >
                 <Image src={el.img} alt="img" />
                 <Title>{el.text}</Title>
               </div>

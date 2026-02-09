@@ -15,156 +15,143 @@ import { LuSearch, LuUserRound } from "react-icons/lu";
 import Link from "next/link";
 import { PAGE } from "@/config/pages/public-page.config";
 import { Title } from "@/components/ui/text/Title";
-import { IoMdClose } from "react-icons/io";
-import { LOCATION, LOCATION_LINK, PHONE_NUMBER, PHONE_NUMBER_LINK } from "@/constants/admin";
+import {
+  LOCATION,
+  LOCATION_LINK,
+  PHONE_NUMBER,
+  PHONE_NUMBER_LINK,
+} from "@/constants/admin";
+import { useProducts } from "@/redux/hooks/product";
+import { MdOutlineClose } from "react-icons/md";
 
 const Header = () => {
-	const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const { data } = useProducts();
+  const [search, setSearch] = useState("");
 
-	const toggleLogin = () => setIsLoginOpen((prev) => !prev);
+  const filteredProducts =
+    data?.filter((el) =>
+      el.product_name.toLowerCase().includes(search.toLowerCase()),
+    ) || [];
 
-	return (
-		<header className="w-full top-0 left-0 sticky bg-white z-50">
-			{/* Верхняя панель */}
-			<div className="border-b py-3">
-				<div className="container">
-					<div className="flex justify-between items-center">
-						<Link href={PAGE.HOME}>
-							<Image className="w-[118px] md:w-fit" src={logo} alt="logo" />
-						</Link>
-						<div className="flex items-center gap-[16px]">
-							<div className="flex gap-[16px]">
-								<Image
-									className="md:flex hidden"
-									src={telegram}
-									alt="telegram"
-								/>
-								<Image
-									className="md:flex hidden"
-									src={instagram}
-									alt="instagram"
-								/>
-								<Image
-									className="md:flex hidden"
-									src={whatsapp}
-									alt="whatsapp"
-								/>
-							</div>
-							<div className="flex flex-col gap-[8px]">
-								<Link href={LOCATION_LINK} target={"_blank"}>
-									<Description className="flex items-center gap-1 text-[14px]">
-										<CiLocationOn size={20} /> {LOCATION}
-									</Description>
-								</Link>
+  return (
+    <header className="w-full top-0 left-0 sticky bg-white z-50">
+      {/* верхняя панель */}
+      <div className="border-b py-3">
+        <div className="container flex justify-between items-center">
+          <Link href={PAGE.HOME}>
+            <Image className="w-[118px] md:w-fit" src={logo} alt="logo" />
+          </Link>
 
-								<Link href={PHONE_NUMBER_LINK} target="_blank">
-									<Description className="flex items-center gap-1 ml-1">
-										<BsTelephone />  {PHONE_NUMBER}
-									</Description>
-								</Link>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			{/* Нижняя панель */}
-			<div className="border-b py-3">
-				<div className="container">
-					<div className="flex justify-between items-center gap-[24px]">
-						<Button className="!w-[250px] md:flex hidden items-center bg-[#E60000]">
-							<Link className="flex gap-2 items-center" href={PAGE.CATALOG}>
-								<AiOutlineAppstore className="text-[20px]" />
-								Каталог запчастей
-							</Link>
-						</Button>
-						<Button className="!w-[50px] md:hidden flex items-center bg-[#E60000]">
-							<Link
-								className="flex items-center justify-center"
-								href={PAGE.CATALOG}>
-								<AiOutlineAppstore className="text-[25px] font-[600]" />
-							</Link>
-						</Button>
-
-						<div className="w-full flex justify-end relative">
-							<input
-								className="w-full h-[40px] p-[10px] border rounded-[8px] outline-none"
-								type="text"
-								placeholder="Поиск запчастей"
-							/>
-							<button className="w-[40px] h-[40px] absolute flex items-center justify-center bg-black text-white rounded-[8px]">
-								<LuSearch className="text-[18px]" />
-							</button>
-						</div>
-
-						<div className="md:flex hidden items-center gap-[10px]">
-							<Link href={PAGE.BASKET}>
-								<button className="w-[40px] h-[40px] flex items-center justify-center border bg-none rounded-[8px]">
-									<BsCart3 className="text-[18px]" />
-								</button>
-							</Link>
-							<Link href={PAGE.PROFILE}>
-								<button
-									className="w-[40px] h-[40px] flex items-center justify-center border bg-none rounded-[8px]"
-									// onClick={toggleLogin}
-								>
-									<LuUserRound className="text-[18px]" />
-								</button>
-							</Link>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			{/* Модальное окно */}
-			{/* {isLoginOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 md:w-[384px] w-[90%] max-w-md relative flex flex-col gap-2">
-            <div className="flex w-full justify-between items-center">
-              <Title className="!text-[20px]">Войдите в личный кабинет</Title>
-              <button className="" onClick={toggleLogin}>
-                <IoMdClose />
-              </button>
+          <div className="flex items-center gap-[16px]">
+            <div className="flex gap-[16px]">
+              <Image className="md:flex hidden" src={telegram} alt="" />
+              <Image className="md:flex hidden" src={instagram} alt="" />
+              <Image className="md:flex hidden" src={whatsapp} alt="" />
             </div>
-            <form className="flex flex-col gap-2">
-              <div className="">
-                <Description>Email</Description>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="border p-2 rounded-[8px] outline-none w-full h-[40px]"
-                />
-              </div>
-              <div className="">
-                <Description>Пароль</Description>
-                <input
-                  type="password"
-                  placeholder="Пароль"
-                  className="border p-2 rounded-[8px] outline-none w-full h-[40px]"
-                />
-              </div>
-              <Button className=" text-white mt-4">Войти</Button>
-              <Link
-                className="text-[14px] text-[#E60000] font-[600] w-full flex justify-end"
-                href="/auth/forget"
-              >
-                Забыли пароль?
+
+            <div className="flex flex-col gap-[8px]">
+              <Link href={LOCATION_LINK} target="_blank">
+                <Description className="flex items-center gap-1 text-[14px]">
+                  <CiLocationOn size={20} /> {LOCATION}
+                </Description>
               </Link>
-              <Link
-                className="text-[14px] w-full flex justify-center gap-2"
-                href="/auth/register"
-              >
-                Нету аккаунта?
-                <span className="text-[#E60000] font-[600]">
-                  Зарегистрироваться
-                </span>
+
+              <Link href={PHONE_NUMBER_LINK} target="_blank">
+                <Description className="flex items-center gap-1 ml-1">
+                  <BsTelephone /> {PHONE_NUMBER}
+                </Description>
               </Link>
-            </form>
+            </div>
           </div>
         </div>
-      )} */}
-		</header>
-	);
+      </div>
+
+      {/* нижняя панель */}
+      <div className="border-b py-3">
+        <div className="container flex justify-between items-center gap-[24px]">
+          {/* каталог */}
+          <Button className="!w-[250px] md:flex hidden bg-[#E60000]">
+            <Link className="flex gap-2 items-center" href={PAGE.CATALOG}>
+              <AiOutlineAppstore /> Каталог запчастей
+            </Link>
+          </Button>
+
+          {/* поиск */}
+          <div className="w-full flex flex-col relative">
+            <div className="relative w-full">
+              <input
+                className="w-full h-[40px] p-[10px] border rounded-[8px] outline-none"
+                placeholder="Поиск запчастей"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+
+              {/* кнопки */}
+              <div className="absolute right-0 top-0 flex w-[80px]">
+                <button
+                  onClick={() => setSearch("")}
+                  className={`w-[40px] h-[40px] flex items-center justify-center transition-opacity duration-200 ${
+                    search ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <MdOutlineClose />
+                </button>
+
+                <button className="w-[40px] h-[40px] bg-black text-white rounded-[8px] flex items-center justify-center">
+                  <LuSearch />
+                </button>
+              </div>
+            </div>
+
+            {/* подсказки */}
+            {search && filteredProducts.length > 0 && (
+              <div className="absolute mt-12 w-full bg-white border rounded-[8px] shadow max-h-[205px] overflow-auto z-50 p-3 flex flex-col gap-2">
+                {filteredProducts.map((el) => (
+                  <Link
+                    key={el.slug}
+                    href={`/detail/${el.slug}`}
+                    onClick={() => setSearch("")} // ⭐ очищает поиск
+                    className="flex items-center gap-4 h-[56px] rounded hover:bg-[#FAFAFA] p-2 border"
+                  >
+                    <div className="w-[40px] h-[40px] overflow-hidden rounded bg-gray-100">
+                      {el.images?.length > 0 && (
+                        <Image
+                          src={`https://alimmah05.pythonanywhere.com${el.images[0].image}`}
+                          alt={el.product_name}
+                          width={100}
+                          height={100}
+                          className="object-cover w-full h-full"
+                        />
+                      )}
+                    </div>
+
+                    <Title className="font-[400] text-[14px]">
+                      {el.product_name}
+                    </Title>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* иконки */}
+          <div className="md:flex hidden gap-[10px]">
+            <Link href={PAGE.BASKET}>
+              <button className="w-[40px] h-[40px] border rounded-[8px] flex items-center justify-center">
+                <BsCart3 />
+              </button>
+            </Link>
+
+            <Link href={PAGE.PROFILE}>
+              <button className="w-[40px] h-[40px] border rounded-[8px] flex items-center justify-center">
+                <LuUserRound />
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
 };
 
 export default Header;
