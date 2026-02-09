@@ -5,11 +5,6 @@ import { TitleComponent } from "@/components/ui/text/TitleComponent";
 import { BsCart3 } from "react-icons/bs";
 
 import Image from "next/image";
-import React from "react";
-
-import img2 from "@/assets/svg/card.svg";
-import img from "@/assets/svg/card2.svg";
-import img3 from "@/assets/images/Asim.png";
 import Button from "@/components/ui/button/Button";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,205 +13,12 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Link from "next/link";
-
-const data = [
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img2,
-      },
-      {
-        img: img,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    discount: 30,
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img2,
-      },
-      {
-        img: img,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    discount: 30,
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-  {
-    title: "Капот для Toyota CH-R (2016-2019)",
-    price: 53500,
-    article: "X0390000047",
-    images: [
-      {
-        img: img,
-      },
-      {
-        img: img2,
-      },
-      {
-        img: img3,
-      },
-    ],
-  },
-];
+import { useProducts } from "@/redux/hooks/product";
 
 const Card = () => {
+  const { data } = useProducts();
+  console.log(data, "data data");
+
   return (
     <section className="py-[20px] md:py-[50px]">
       <div className="container">
@@ -229,9 +31,10 @@ const Card = () => {
             </Description>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-[22px]">
-            {data.map((el, i) => (
+            {data?.map((el, i) => (
               <Link
-                href={"/detail"}
+                // href={"/detail"}
+                href={`/detail/${el.slug}`}
                 key={i}
                 className="flex flex-col gap-[14px] h-full" // добавили h-full
               >
@@ -254,9 +57,11 @@ const Card = () => {
                         <SwiperSlide key={idx}>
                           <div className="w-full h-[157px] overflow-hidden rounded-t-[20px]">
                             <Image
-                              src={item.img}
-                              alt={el.title}
-                              className="w-full object-cover h-full"
+                              src={`https://alimmah05.pythonanywhere.com${item.image}`}
+                              alt="img"
+                              width={300}
+                              height={200}
+                              className="object-cover w-full h-full"
                             />
                           </div>
                         </SwiperSlide>
@@ -265,7 +70,11 @@ const Card = () => {
 
                     {el.discount && (
                       <h2 className="absolute top-0 left-0 z-10 flex justify-center text-[16px] text-white bg-[#E60000] rounded-[20px] px-3 py-2">
-                        -{el.discount}%
+                        -
+                        {Math.round(
+                          ((el.price - el.discount) / el.price) * 100,
+                        )}
+                        %
                       </h2>
                     )}
                   </div>
@@ -278,11 +87,11 @@ const Card = () => {
                 <div className="flex flex-col gap-[6px] flex-1">
                   {" "}
                   {/* flex-1 растягивает карточку */}
-                  <Title className="font-[100]">{el.title}</Title>
+                  <Title className="font-[100]">{el.product_name}</Title>
                   <div className="flex items-center gap-1">
                     {el.discount ? (
                       <>
-                        <Title>{el.price - el.discount}c</Title>
+                        <Title>{el.discount}c</Title>
                         <Title className="text-[#747474] line-through">
                           {el.price}c
                         </Title>
@@ -291,7 +100,7 @@ const Card = () => {
                       <Title>{el.price}c</Title>
                     )}
                   </div>
-                  <Description>{el.article}</Description>
+                  <Description>АРТИКУЛ: {el.article}</Description>
                 </div>
 
                 <Button className="flex items-center gap-2 mt-auto">

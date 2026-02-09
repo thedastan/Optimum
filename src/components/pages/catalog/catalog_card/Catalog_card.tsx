@@ -18,6 +18,7 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { IoArrowBackOutline, IoArrowForward } from "react-icons/io5";
+import { useProducts } from "@/redux/hooks/product";
 
 const data = [
   {
@@ -217,6 +218,9 @@ const data = [
 ];
 
 const Catalog_card = () => {
+  const { data } = useProducts();
+  console.log(data, "data data");
+
   return (
     <section className="">
       <div className="container">
@@ -224,7 +228,7 @@ const Catalog_card = () => {
           <TitleComponent className="py-4">Похожие товары</TitleComponent>
           <div className="w-full flex flex-col gap-4">
             <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-[22px]">
-              {data.map((el, i) => (
+              {data?.map((el, i) => (
                 <div
                   key={i}
                   className="flex flex-col gap-[14px] h-full" // добавили h-full
@@ -247,8 +251,10 @@ const Catalog_card = () => {
                           <SwiperSlide key={idx}>
                             <div className="w-full h-[157px] overflow-hidden rounded-t-[20px]">
                               <Image
-                                src={item.img}
-                                alt={el.title}
+                                src={`https://alimmah05.pythonanywhere.com${item.image}`}
+                                width={300}
+                                height={157}
+                                alt="img"
                                 className="w-full object-cover h-full"
                               />
                             </div>
@@ -271,7 +277,7 @@ const Catalog_card = () => {
                   <div className="flex flex-col gap-[6px] flex-1">
                     {" "}
                     {/* flex-1 растягивает карточку */}
-                    <Title className="font-[100]">{el.title}</Title>
+                    <Title className="font-[100]">{el.product_name}</Title>
                     <div className="flex items-center gap-1">
                       {el.discount ? (
                         <>
@@ -284,7 +290,10 @@ const Catalog_card = () => {
                         <Title>{el.price}c</Title>
                       )}
                     </div>
-                    <Description>{el.article}</Description>
+                    <Description className="!text-[12px]">
+                      {" "}
+                      АРТИКУЛ{el.article}
+                    </Description>
                   </div>
 
                   <Button className="flex items-center gap-2 mt-auto">
