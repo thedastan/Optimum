@@ -97,7 +97,11 @@ const Catalog_card: React.FC<CatalogCardProps> = ({ filters }) => {
 
                       {el.discount && (
                         <h2 className="absolute top-0 left-0 z-10 flex justify-center text-[16px] text-white bg-[#E60000] rounded-[20px] px-3 py-2">
-                          -{el.discount}%
+                          -
+                          {Math.round(
+                            ((el.price - el.discount) / el.price) * 100,
+                          )}
+                          %
                         </h2>
                       )}
                     </div>

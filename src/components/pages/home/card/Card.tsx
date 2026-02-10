@@ -14,6 +14,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import Link from "next/link";
 import { useProducts } from "@/redux/hooks/product";
+import { addToCart } from "@/components/shared/utils/cartStorage";
 
 const Card = () => {
   const { data } = useProducts();
@@ -103,9 +104,28 @@ const Card = () => {
                   <Description>АРТИКУЛ: {el.article}</Description>
                 </div>
 
-                <Button className="flex items-center gap-2 mt-auto">
-                  {" "}
+                {/* <Button className="flex items-center gap-2 mt-auto">
+                   
                   <BsCart3 />В корзину
+                </Button> */}
+
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addToCart({
+                      id: el.id,
+                      product_name: el.product_name,
+                      price: el.price,
+                      discount: el.discount,
+                      slug: el.slug,
+                      article: el.article,
+                      images: el.images,
+                      quantity: 1,
+                    });
+                  }}
+                  className="flex items-center gap-2 mt-auto"
+                >
+                  <BsCart3 /> В корзину
                 </Button>
               </Link>
             ))}
