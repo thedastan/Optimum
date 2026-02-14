@@ -19,6 +19,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { IoArrowBackOutline, IoArrowForward } from "react-icons/io5";
 import { useProducts } from "@/redux/hooks/product";
+import Link from "next/link";
 
 interface CatalogCardProps {
   filters: {
@@ -62,7 +63,8 @@ const Catalog_card: React.FC<CatalogCardProps> = ({ filters }) => {
           <div className="w-full flex flex-col gap-4">
             <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-[22px]">
               {filteredProducts?.map((el, i) => (
-                <div
+                <Link
+                  href={`/detail/${el.slug}`}
                   key={i}
                   className="flex flex-col gap-[14px] h-full" // добавили h-full
                 >
@@ -136,7 +138,7 @@ const Catalog_card: React.FC<CatalogCardProps> = ({ filters }) => {
                   <Button className="flex items-center gap-2 mt-auto">
                     <BsCart3 />В корзину
                   </Button>
-                </div>
+                </Link>
               ))}
             </div>
             {filteredProducts.length > 0 && (

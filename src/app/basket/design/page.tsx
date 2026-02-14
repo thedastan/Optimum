@@ -1,6 +1,13 @@
+// app/basket/design/page.tsx
+"use client";
+
+import React, { Suspense } from "react";
 import Design from "@/components/pages/basket/design/Design";
-import React from "react";
 
-const page = () => <Design />;
+const Page = () => (
+  <Suspense fallback={<div>Загрузка...</div>}>
+    <Design />
+  </Suspense>
+);
 
-export default page;
+export default Page;

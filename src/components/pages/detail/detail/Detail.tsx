@@ -165,7 +165,21 @@ const Detail = () => {
                 </Button>
 
                 <Button className="w-full !bg-[#E60000]">
-                  <Link className="w-full py-1" href="/basket/design">
+                  <Link
+                    href={{
+                      pathname: "/basket/design",
+                      query: {
+                        product: JSON.stringify({
+                          id: el.id,
+                          product_name: el.product_name,
+                          price: el.price,
+                          discount: el.discount,
+                          article: el.article,
+                          quantity: 1,
+                        }),
+                      },
+                    }}
+                  >
                     Оформить заказ
                   </Link>
                 </Button>
