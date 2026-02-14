@@ -72,7 +72,7 @@ const Basket = () => {
                               <SwiperSlide key={idx}>
                                 <div className="w-full h-[106px] overflow-hidden rounded-t-[20px]">
                                   <Image
-                                    src={`https://alimmah05.pythonanywhere.com${item.image}`}
+                                    src={item.image}
                                     alt={el.product_name}
                                     width={100}
                                     height={100}

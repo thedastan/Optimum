@@ -84,7 +84,7 @@ const Catalog_card: React.FC<CatalogCardProps> = ({ filters }) => {
                           <SwiperSlide key={idx}>
                             <div className="w-full h-[157px] overflow-hidden rounded-t-[20px]">
                               <Image
-                                src={`https://alimmah05.pythonanywhere.com${item.image}`}
+                                src={item.image}
                                 width={300}
                                 height={157}
                                 alt="img"

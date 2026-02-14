@@ -16,6 +16,9 @@ import "swiper/css/thumbs";
 import { BsCart3 } from "react-icons/bs";
 import { useProductBySlug } from "@/redux/hooks/product";
 import { useParams } from "next/navigation";
+import Button from "@/components/ui/button/Button";
+import { addToCart } from "@/components/shared/utils/cartStorage";
+import Link from "next/link";
 
 const Detail = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
@@ -63,7 +66,7 @@ const Detail = () => {
               {el.images.map((img, index) => (
                 <SwiperSlide key={img.id}>
                   <Image
-                    src={`https://alimmah05.pythonanywhere.com${img.image}`}
+                    src={img.image}
                     alt={el.product_name}
                     width={451}
                     height={231}
@@ -87,7 +90,7 @@ const Detail = () => {
                 <SwiperSlide key={img.id}>
                   <div className="h-[64px] rounded-[12px] overflow-hidden border">
                     <Image
-                      src={`https://alimmah05.pythonanywhere.com${img.image}`}
+                      src={img.image}
                       alt="preview"
                       width={110}
                       height={64}
@@ -124,7 +127,7 @@ const Detail = () => {
             </div>
 
             {/* ===== Цена ===== */}
-            <div className="border rounded-[16px] p-4 w-full max-w-[484px]">
+            <div className="border flex flex-col justify-start h-full rounded-[16px] p-4 w-full max-w-[484px]">
               <div className="flex justify-between">
                 <Title>Цена:</Title>
 
@@ -139,13 +142,33 @@ const Detail = () => {
               </div>
 
               <div className="flex flex-col gap-2 pt-4 border-t mt-6">
-                <button className="flex items-center justify-center gap-1 px-4 py-2 bg-[#131316] text-white rounded-[8px]">
+                {/* <button className="flex items-center justify-center gap-1 px-4 py-2 bg-[#131316] text-white rounded-[8px]">
                   <BsCart3 /> В корзину
-                </button>
+                </button> */}
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addToCart({
+                      id: el.id,
+                      product_name: el.product_name,
+                      price: el.price,
+                      discount: el.discount,
+                      slug: el.slug,
+                      article: el.article,
+                      images: el.images,
+                      quantity: 1,
+                    });
+                  }}
+                  className="flex items-center gap-2 mt-auto"
+                >
+                  <BsCart3 /> В корзину
+                </Button>
 
-                <button className="px-4 py-2 bg-[#E60000] text-white rounded-[8px]">
-                  Оформить заказ
-                </button>
+                <Button className="w-full !bg-[#E60000]">
+                  <Link className="w-full py-1" href="/basket/design">
+                    Оформить заказ
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>

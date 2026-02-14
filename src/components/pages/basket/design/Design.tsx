@@ -11,6 +11,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 
 import { getCart, ICartItem } from "@/components/shared/utils/cartStorage";
+import { useMyData } from "@/redux/hooks/auth";
 
 interface IFormTelegram {
   name: string;
@@ -22,11 +23,22 @@ const Design = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cart, setCart] = useState<ICartItem[]>([]);
 
-  const { register, handleSubmit, reset } = useForm<IFormTelegram>();
+  const { data: user } = useMyData();
+
+  const { register, handleSubmit, reset, setValue } = useForm<IFormTelegram>();
 
   useEffect(() => {
     setCart(getCart());
   }, []);
+
+  // 👉 если пользователь авторизован — подставляем данные в форму
+  useEffect(() => {
+    if (user) {
+      setValue("name", user.first_name || "");
+      setValue("phone", user.phone_number || "");
+      setValue("whatsapp", user.whatsapp || "");
+    }
+  }, [user, setValue]);
 
   const totalPrice = cart.reduce(
     (acc, el) => acc + (el.discount || el.price) * el.quantity,

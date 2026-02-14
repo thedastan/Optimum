@@ -16,8 +16,9 @@ const PUBLIC_API = axios.create(options);
 const PRIVATE_API = axios.create(options);
 
 // Интерцептор запросов — добавляем токен из localStorage
+// src/api/interceptors.ts
 PRIVATE_API.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("access_token"); // маленькая t
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

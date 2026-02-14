@@ -1,17 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "@/assets/svg/logo.svg";
 import instagram from "@/assets/svg/instagram__logo.svg";
 import telegram from "@/assets/svg/telegram__logo.svg";
 import whatsapp from "@/assets/svg/watsapp_logo.svg";
 import { Description } from "@/components/ui/text/Description";
-import { CiLocationOn } from "react-icons/ci";
+import { CiLocationOn, CiLogout } from "react-icons/ci";
 import { BsCart3, BsTelephone } from "react-icons/bs";
 import { AiOutlineAppstore } from "react-icons/ai";
 import Button from "@/components/ui/button/Button";
-import { LuSearch, LuUserRound } from "react-icons/lu";
+import { LuLogOut, LuSearch, LuUserRound } from "react-icons/lu";
 import Link from "next/link";
 import { PAGE } from "@/config/pages/public-page.config";
 import { Title } from "@/components/ui/text/Title";
@@ -23,10 +23,28 @@ import {
 } from "@/constants/admin";
 import { useProducts } from "@/redux/hooks/product";
 import { MdOutlineClose } from "react-icons/md";
+import LoginModal from "./LoginModal";
+import { useRouter } from "next/navigation";
+import { useLogout } from "@/redux/hooks/auth";
+import { RiLogoutBoxLine } from "react-icons/ri";
 
 const Header = () => {
   const { data } = useProducts();
   const [search, setSearch] = useState("");
+
+  const router = useRouter();
+  const logout = useLogout();
+
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    setIsAuth(!!localStorage.getItem("access_token"));
+  }, []);
+
+  // const isAuth =
+  //   typeof window !== "undefined" && localStorage.getItem("access_token");
+
+  const [openModal, setOpenModal] = useState(false);
 
   const filteredProducts =
     data?.filter((el) =>
@@ -116,7 +134,7 @@ const Header = () => {
                     <div className="w-[40px] h-[40px] overflow-hidden rounded bg-gray-100">
                       {el.images?.length > 0 && (
                         <Image
-                          src={`https://alimmah05.pythonanywhere.com${el.images[0].image}`}
+                          src={el.images[0].image}
                           alt={el.product_name}
                           width={100}
                           height={100}
@@ -142,14 +160,77 @@ const Header = () => {
               </button>
             </Link>
 
-            <Link href={PAGE.PROFILE}>
-              <button className="w-[40px] h-[40px] border rounded-[8px] flex items-center justify-center">
+            {!isAuth ? (
+              <button
+                onClick={() => setOpenModal(true)}
+                className="w-[40px] h-[40px] border rounded-[8px] flex items-center justify-center"
+              >
                 <LuUserRound />
               </button>
-            </Link>
+            ) : (
+              <button
+                onClick={() => {
+                  logout();
+                  setIsAuth(false);
+                  router.push("/");
+                }}
+                className="px-4 h-[40px] border rounded-[8px]"
+              >
+                <RiLogoutBoxLine />
+              </button>
+            )}
+
+            <LoginModal
+              openModal={openModal}
+              setOpenModal={setOpenModal}
+              setIsAuth={setIsAuth}
+            />
           </div>
         </div>
       </div>
+      {/* 
+      {openModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={() => setOpenModal(false)} // клик по фону закрывает
+        >
+          <div
+            className="bg-white rounded-lg w-[400px] p-6 relative"
+            onClick={(e) => e.stopPropagation()} // клик внутри модалки не закрывает
+          >
+            <button
+              onClick={() => setOpenModal(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-900"
+            >
+              <MdOutlineClose size={24} />
+            </button>
+
+            <h2 className="text-xl font-bold mb-4">Вход / Регистрация</h2>
+
+            <div className="flex flex-col gap-4">
+              <input
+                type="text"
+                placeholder="Email"
+                className="border p-2 rounded"
+              />
+              <input
+                type="password"
+                placeholder="Пароль"
+                className="border p-2 rounded"
+              />
+              <button className="bg-red-600 text-white p-2 rounded">
+                Войти
+              </button>
+              <button className=" text-red-600 p-2 rounded">
+                Забыли пароль?
+              </button>
+              <button className=" text-red-600 p-2 rounded">
+                Зарегистрироваться
+              </button>
+            </div>
+          </div>
+        </div>
+      )} */}
     </header>
   );
 };
