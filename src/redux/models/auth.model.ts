@@ -22,8 +22,8 @@ export interface IUserLogin {
 }
 
 export interface IAuthResponse {
-  access: string;
-  refresh: string;
+  access_token: string;
+  refresh_token: string;
   user: {
     id: number;
     email: string;

@@ -168,6 +168,16 @@ const Header = () => {
                 <LuUserRound />
               </button>
             ) : (
+              <Link href="/auth/user">
+                <button className="w-[40px] h-[40px] border rounded-[8px] flex items-center justify-center">
+                  <LuUserRound />
+                </button>
+              </Link>
+            )}
+
+            {!isAuth ? (
+              <></>
+            ) : (
               <button
                 onClick={() => {
                   logout();

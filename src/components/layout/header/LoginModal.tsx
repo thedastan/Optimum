@@ -25,16 +25,19 @@ const LoginModal = ({ openModal, setOpenModal, setIsAuth }: Props) => {
     e.preventDefault();
 
     try {
-      const response = await loginMutation.mutateAsync({ email, password });
+      const response = await loginMutation.mutateAsync({
+        email,
+        password,
+      });
 
-      //   localStorage.setItem("access_token", response.access_token);
-      //   localStorage.setItem("refresh_token", response.refresh_token);
+      // ✅ правильные поля из IAuthResponse
+      //   localStorage.setItem("access_token", response.access);
+      //   localStorage.setItem("refresh_token", response.refresh);
+      localStorage.setItem("access_token", response.access_token);
+      localStorage.setItem("refresh_token", response.refresh_token);
 
-      localStorage.setItem("access_token", response.access);
-      localStorage.setItem("refresh_token", response.refresh);
-
-      setIsAuth(true); // ⭐ обновляем Header
-      setOpenModal(false); // закрываем модалку
+      setIsAuth(true);
+      setOpenModal(false);
 
       router.push("/auth/user");
     } catch (err: any) {
@@ -66,7 +69,7 @@ const LoginModal = ({ openModal, setOpenModal, setIsAuth }: Props) => {
             <Description>Email</Description>
             <input
               type="email"
-              className="w-full border p-2 rounded outline-none"
+              className="w-full border p-2 rounded-[8px] outline-none"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -76,8 +79,8 @@ const LoginModal = ({ openModal, setOpenModal, setIsAuth }: Props) => {
           <div>
             <Description>Пароль</Description>
             <input
-              type="text" // вместо "password"
-              className="w-full border p-2 rounded outline-none"
+              type="text" // пароль видимый как ты хотел
+              className="w-full border p-2 rounded-[8px] outline-none"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -88,15 +91,17 @@ const LoginModal = ({ openModal, setOpenModal, setIsAuth }: Props) => {
             Войти
           </Button>
 
-          <button
-            type="button"
-            className="text-red-600 text-right"
-            onClick={() => alert("Функция восстановления пароля")}
-          >
-            Забыли пароль?
+          <button type="button" className="text-red-600 text-right">
+            <Link href="/auth/forget" onClick={() => setOpenModal(false)}>
+              Забыли пароль?
+            </Link>
           </button>
 
-          <Link href="/auth/register" className="text-center">
+          <Link
+            href="/auth/register"
+            onClick={() => setOpenModal(false)}
+            className="text-center"
+          >
             Нет аккаунта?{" "}
             <span className="text-red-600 font-semibold">
               Зарегистрироваться
