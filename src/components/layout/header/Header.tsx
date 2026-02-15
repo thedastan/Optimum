@@ -28,6 +28,9 @@ import { useRouter } from "next/navigation";
 import { useLogout } from "@/redux/hooks/auth";
 import { RiLogoutBoxLine } from "react-icons/ri";
 
+import { toast } from "alert-go";
+import "alert-go/dist/notifier.css";
+
 const Header = () => {
   const { data } = useProducts();
   const [search, setSearch] = useState("");
@@ -38,7 +41,14 @@ const Header = () => {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    setIsAuth(!!localStorage.getItem("access_token"));
+    const checkAuth = () => {
+      setIsAuth(!!localStorage.getItem("access_token"));
+    };
+
+    checkAuth(); // при загрузке
+    window.addEventListener("auth-changed", checkAuth);
+
+    return () => window.removeEventListener("auth-changed", checkAuth);
   }, []);
 
   // const isAuth =
@@ -181,8 +191,13 @@ const Header = () => {
               <button
                 onClick={() => {
                   logout();
+                  window.dispatchEvent(new Event("auth-changed"));
                   setIsAuth(false);
                   router.push("/");
+
+                  toast.success("Вы вышли", {
+                    position: "top-center",
+                  });
                 }}
                 className="px-4 h-[40px] border rounded-[8px]"
               >
