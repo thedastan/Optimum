@@ -17,32 +17,42 @@ import { useProducts } from "@/redux/hooks/product";
 import { addToCart } from "@/components/shared/utils/cartStorage";
 
 const Card = () => {
-  const { data } = useProducts();
-  console.log(data, "data data");
+  const { data, isLoading } = useProducts();
 
   return (
     <section className="py-[20px] md:py-[50px]">
       <div className="container">
-        <div className="">
-          <div className="">
-            <TitleComponent>Популярные товары</TitleComponent>
-            <Description className="mt-[22px] w-[340px] md:w-full">
-              Качественные капоты для автомобилей популярных брендов. Прочный
-              металл, идеальная посадка, возможность окраски в цвет вашего авто.
-            </Description>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-[22px]">
-            {data?.map((el, i) => (
+        <TitleComponent>Популярные товары</TitleComponent>
+
+        <Description className="mt-[22px] w-[340px] md:w-full">
+          Качественные капоты для автомобилей популярных брендов. Прочный
+          металл, идеальная посадка, возможность окраски в цвет вашего авто.
+        </Description>
+
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-[22px]">
+          {/* ===== SKELETON ===== */}
+          {isLoading &&
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="animate-pulse flex flex-col gap-[14px]">
+                <div className="w-full h-[157px] bg-gray-200 rounded-[20px]" />
+
+                <div className="h-[14px] bg-gray-200 rounded w-3/4" />
+                <div className="h-[14px] bg-gray-200 rounded w-1/2" />
+                <div className="h-[14px] bg-gray-200 rounded w-2/3" />
+
+                <div className="h-[40px] bg-gray-200 rounded-[8px]" />
+              </div>
+            ))}
+
+          {/* ===== PRODUCTS ===== */}
+          {!isLoading &&
+            data?.map((el, i) => (
               <Link
-                // href={"/detail"}
                 href={`/detail/${el.slug}`}
-                key={i}
-                className="flex flex-col gap-[14px] h-full" // добавили h-full
+                key={el.id}
+                className="flex flex-col gap-[14px] h-full"
               >
                 <div className="flex flex-col gap-[6px] flex-1">
-                  {/* flex-1 растягивает карточку */}
-                  {/* Слайдер картинки */}
-
                   <div className="relative w-full">
                     <Swiper
                       modules={[Pagination]}
@@ -79,16 +89,15 @@ const Card = () => {
                       </h2>
                     )}
                   </div>
-                  {/* Точки под картинкой */}
+
                   <div
-                    className={`custom-pagination-${i} flex justify-center `}
+                    className={`custom-pagination-${i} flex justify-center`}
                   ></div>
                 </div>
 
                 <div className="flex flex-col gap-[6px] flex-1">
-                  {" "}
-                  {/* flex-1 растягивает карточку */}
                   <Title className="font-[100]">{el.product_name}</Title>
+
                   <div className="flex items-center gap-1">
                     {el.discount ? (
                       <>
@@ -101,13 +110,9 @@ const Card = () => {
                       <Title>{el.price}c</Title>
                     )}
                   </div>
+
                   <Description>АРТИКУЛ: {el.article}</Description>
                 </div>
-
-                {/* <Button className="flex items-center gap-2 mt-auto">
-                   
-                  <BsCart3 />В корзину
-                </Button> */}
 
                 <Button
                   onClick={(e) => {
@@ -129,7 +134,6 @@ const Card = () => {
                 </Button>
               </Link>
             ))}
-          </div>
         </div>
       </div>
     </section>

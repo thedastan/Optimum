@@ -34,8 +34,45 @@ const Detail = () => {
 
   const { data, isLoading } = useProductBySlug(slug);
 
-  console.log(slug, "slug");
-  console.log(data, "detail data");
+  // ✅ Skeleton
+  if (isLoading) {
+    return (
+      <section className="py-6 animate-pulse">
+        <div className="container">
+          <div className="h-8 w-1/2 bg-gray-200 rounded mb-6" />
+
+          <div className="flex md:flex-row flex-col gap-3">
+            {/* Фото */}
+            <div className="w-full max-w-[451px]">
+              <div className="h-[231px] bg-gray-200 rounded-[12px]" />
+              <div className="flex gap-2 mt-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-[64px] w-full bg-gray-200 rounded-[12px]"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Инфо */}
+            <div className="flex flex-col gap-3 w-full">
+              <div className="h-4 w-3/4 bg-gray-200 rounded" />
+              <div className="h-4 w-1/2 bg-gray-200 rounded" />
+              <div className="h-4 w-2/3 bg-gray-200 rounded" />
+              <div className="h-4 w-1/3 bg-gray-200 rounded" />
+
+              <div className="border rounded-[16px] p-4 mt-4">
+                <div className="h-5 w-1/2 bg-gray-200 rounded mb-4" />
+                <div className="h-10 bg-gray-200 rounded mb-2" />
+                <div className="h-10 bg-gray-200 rounded" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!data) return null;
 
@@ -50,7 +87,7 @@ const Detail = () => {
         </TitleComponent>
 
         <div className="flex md:flex-row flex-col gap-3 items-start">
-          {/* ===== Слайдер ===== */}
+          {/* Слайдер */}
           <div className="w-full max-w-[451px]">
             <Swiper
               modules={[Thumbs]}
@@ -77,7 +114,6 @@ const Detail = () => {
               ))}
             </Swiper>
 
-            {/* Миниатюры */}
             <Swiper
               onSwiper={setThumbsSwiper}
               modules={[Thumbs]}
@@ -102,7 +138,7 @@ const Detail = () => {
             </Swiper>
           </div>
 
-          {/* ===== Информация ===== */}
+          {/* Информация */}
           <div className="flex justify-between md:flex-row flex-col-reverse gap-3 w-full">
             <div className="flex flex-col gap-1">
               <Description className="font-[500]">{el.description}</Description>
@@ -126,8 +162,8 @@ const Detail = () => {
               </Description>
             </div>
 
-            {/* ===== Цена ===== */}
-            <div className="border flex flex-col justify-start h-full rounded-[16px] p-4 w-full max-w-[484px]">
+            {/* Цена */}
+            <div className="border flex flex-col rounded-[16px] p-4 w-full h-full max-w-[484px]">
               <div className="flex justify-between">
                 <Title>Цена:</Title>
 
@@ -142,9 +178,6 @@ const Detail = () => {
               </div>
 
               <div className="flex flex-col gap-2 pt-4 border-t mt-6">
-                {/* <button className="flex items-center justify-center gap-1 px-4 py-2 bg-[#131316] text-white rounded-[8px]">
-                  <BsCart3 /> В корзину
-                </button> */}
                 <Button
                   onClick={(e) => {
                     e.preventDefault();

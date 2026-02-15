@@ -1,7 +1,8 @@
-'use client'
+"use client";
 import { useEffect, useRef, useState } from "react";
 import { IoCheckmark } from "react-icons/io5";
 import { LuSearch } from "react-icons/lu";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 interface CustomSelectProps {
   label: string;
@@ -21,14 +22,15 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (selectedValue: string) => {
     onChange(selectedValue);
     setIsOpen(false);
+    setSearchQuery("");
   };
 
-  // Закрытие при клике вне
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -36,6 +38,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
+        setSearchQuery("");
       }
     };
 
@@ -48,41 +51,45 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     };
   }, [isOpen]);
 
+  const filteredOptions = options.filter((option) =>
+    option.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+
   return (
     <div className="relative" ref={dropdownRef}>
-       
       <button
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`w-full h-[48px] px-4 border-[#E4E4E7] bg-white text-[#000000] rounded-[8px] text-[14px] font-[400] border outline-none transition-all duration-200 text-left flex justify-between items-center ${
-          disabled
-            ? "opacity-50 cursor-not-allowed"
-            : "cursor-pointer hover:border-[#515151]"
-        }`}>
+          disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+        }`}
+      >
         <span>{value || placeholder}</span>
-        <span className="text-[#515151]">
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M7.5 11L4 7.5l-1 1L7.5 13 12 8.5l-1-1L7.5 11z" />
-          </svg>
+
+        <span className="text-[#515151] text-[22px]">
+          {isOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
         </span>
       </button>
 
       {isOpen && !disabled && (
-        <div
-          className="absolute p-2 z-50 mt-1 w-full bg-white border border-[#E4E4E7] rounded-[8px] shadow-lg max-h-60 overflow-auto"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-          <div className="w-full flex   border rounded-[8px] justify-end relative">
-            <button className="w-[40px] h-[40px] p-[10px]   rounded-[8px]">
+        <div className="absolute p-2 z-50 mt-1 w-full bg-white border border-[#E4E4E7] rounded-[8px] shadow-lg max-h-60 overflow-auto">
+          <div className="w-full flex border rounded-[8px] justify-end relative">
+            <button className="w-[40px] h-[40px] p-[10px] rounded-[8px]">
               <LuSearch className="text-[18px]" />
             </button>
+
             <input
               className="w-full h-[40px] p-[10px] rounded-[8px] outline-none"
               type="text"
               placeholder="Поиск"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          {options.map((option) => (
+
+          {filteredOptions.map((option) => (
             <button
               key={option}
               type="button"
@@ -91,13 +98,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                 value === option
                   ? "bg-[#F5F5F5] text-[#000000] font-medium"
                   : "text-[#515151]"
-              }`}>
+              }`}
+            >
               {option}
-              {value === option ? (
-                <span>
-                  <IoCheckmark size={23} />
-                </span>
-              ) : null}
+              {value === option && <IoCheckmark size={23} />}
             </button>
           ))}
         </div>
@@ -106,4 +110,4 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   );
 };
 
-export default CustomSelect
+export default CustomSelect;

@@ -114,7 +114,7 @@ const Brand = () => {
             {data.map((el, index) => (
               <div
                 key={index}
-                className="md:w-[213px] w-[114px] h-[120px] border rounded-[8px] flex flex-col justify-center items-center gap-[8px]"
+                className="w-full h-[120px] border rounded-[8px] flex flex-col justify-center items-center gap-[8px]"
               >
                 <Image src={el.img} alt="img" />
                 <Title>{el.text}</Title>

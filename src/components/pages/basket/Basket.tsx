@@ -25,21 +25,92 @@ import {
 } from "@/components/shared/utils/cartStorage";
 
 const Basket = () => {
-  const [cart, setCart] = useState<ICartItem[]>([]);
+  const [cart, setCart] = useState<ICartItem[] | null>(null);
 
   useEffect(() => {
-    setCart(getCart());
+    // имитация загрузки
+    setTimeout(() => {
+      setCart(getCart());
+    }, 500); // можно заменить на настоящий fetch
   }, []);
 
   const refresh = () => setCart(getCart());
 
-  const totalPrice = cart.reduce(
-    (acc, el) => acc + (el.discount || el.price) * el.quantity,
-    0,
-  );
+  const totalPrice =
+    cart?.reduce(
+      (acc, el) => acc + (el.discount || el.price) * el.quantity,
+      0,
+    ) || 0;
 
-  const totalCount = cart.reduce((acc, el) => acc + el.quantity, 0);
+  const totalCount = cart?.reduce((acc, el) => acc + el.quantity, 0) || 0;
 
+  // Skeleton пока cart null
+  if (cart === null) {
+    return (
+      <section className="pb-[20px] md:pb-[50px] animate-pulse">
+        <div className="container">
+          <div className="w-full py-4">
+            <div className="h-8 w-1/3 bg-gray-200 rounded mb-6" />
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-start items-center justify-between gap-6">
+            <div className="flex w-full flex-col gap-3 mt-[22px]">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col gap-6 md:flex-row h-full w-full border-b pb-4"
+                >
+                  <div className="w-full flex gap-6">
+                    <div className="w-[116px]">
+                      <div className="h-[106px] bg-gray-200 rounded" />
+                      <div className="flex justify-center mt-2 gap-1">
+                        {Array.from({ length: 3 }).map((_, j) => (
+                          <div
+                            key={j}
+                            className="h-2 w-2 bg-gray-300 rounded-full"
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-[6px] flex-1">
+                      <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                      <div className="h-4 w-1/2 bg-gray-200 rounded" />
+                      <div className="h-4 w-1/3 bg-gray-200 rounded" />
+                      <div className="h-4 w-1/4 bg-gray-200 rounded" />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4 items-start w-full md:w-fit">
+                    <div className="h-[40px] w-[194px] bg-gray-200 rounded-[8px]" />
+                    <div className="h-[40px] w-[40px] bg-gray-200 rounded-[8px]" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-white border rounded-[12px] md:w-[550px] w-[100%] flex flex-col items-center gap-4 p-6">
+              <div className="w-full flex justify-between border-b">
+                <div className="h-6 w-1/2 bg-gray-200 rounded" />
+                <div className="h-6 w-10 bg-gray-200 rounded" />
+              </div>
+
+              <div className="w-full flex justify-between border-b">
+                <div className="h-6 w-1/2 bg-gray-200 rounded" />
+                <div className="h-6 w-10 bg-gray-200 rounded" />
+              </div>
+
+              <div className="flex justify-end w-full mt-2">
+                <div className="h-10 w-full bg-gray-200 rounded" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Если данные есть, рендерим обычную корзину
   return (
     <section className="pb-[20px] md:pb-[50px]">
       <div className="container">

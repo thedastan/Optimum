@@ -198,49 +198,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-      {/* 
-      {openModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={() => setOpenModal(false)} // клик по фону закрывает
-        >
-          <div
-            className="bg-white rounded-lg w-[400px] p-6 relative"
-            onClick={(e) => e.stopPropagation()} // клик внутри модалки не закрывает
-          >
-            <button
-              onClick={() => setOpenModal(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-900"
-            >
-              <MdOutlineClose size={24} />
-            </button>
-
-            <h2 className="text-xl font-bold mb-4">Вход / Регистрация</h2>
-
-            <div className="flex flex-col gap-4">
-              <input
-                type="text"
-                placeholder="Email"
-                className="border p-2 rounded"
-              />
-              <input
-                type="password"
-                placeholder="Пароль"
-                className="border p-2 rounded"
-              />
-              <button className="bg-red-600 text-white p-2 rounded">
-                Войти
-              </button>
-              <button className=" text-red-600 p-2 rounded">
-                Забыли пароль?
-              </button>
-              <button className=" text-red-600 p-2 rounded">
-                Зарегистрироваться
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </header>
   );
 };
