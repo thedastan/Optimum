@@ -1,31 +1,82 @@
-import Button from "@/components/ui/button/Button";
-import { Description } from "@/components/ui/text/Description";
-import { TitleComponent } from "@/components/ui/text/TitleComponent";
+"use client";
+
 import React, { useState } from "react";
+import Button from "@/components/ui/button/Button";
+import { TitleComponent } from "@/components/ui/text/TitleComponent";
+import { useVerifyResetCode } from "@/redux/hooks/auth";
+import { Description } from "@/components/ui/text/Description";
+
+import { toast } from "alert-go";
+import "alert-go/dist/notifier.css";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
-const Create_password = () => {
+interface Props {
+  email: string;
+  resetCode: string;
+  onSuccess: () => void;
+}
+
+const CreatePassword: React.FC<Props> = ({ email, resetCode, onSuccess }) => {
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const { mutateAsync, isPending } = useVerifyResetCode();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!password || !confirm) {
+      toast.error("Введите пароль", { position: "top-center" });
+      return;
+    }
+
+    if (password !== confirm) {
+      toast.error("Пароли не совпадают", { position: "top-center" });
+      return;
+    }
+
+    try {
+      await mutateAsync({
+        email,
+        reset_code: resetCode,
+        new_password: password,
+      });
+
+      onSuccess();
+    } catch {
+      toast.error("Ошибка смены пароля", { position: "top-center" });
+    }
+  };
 
   return (
-    <div className="bg-white border rounded-[12px] md:w-[425px] w-[90%] flex flex-col items-center gap-2 p-6">
-      <TitleComponent className="!text-[24px] w-full text-center">
-        Придумайте новый пароль
+    <div className="bg-white rounded-[12px] p-6 md:w-[420px] w-full">
+      <TitleComponent className="text-center !text-[24px]">
+        Новый пароль
       </TitleComponent>
-      <form className="w-full flex flex-col gap-4 mt-2">
-        <div>
-          <Description>
-            Новый пароль <span className="text-[#E60000] font-[600]">*</span>
+
+      <form className="w-full flex flex-col items-end" onSubmit={handleSubmit}>
+        {/* Password */}
+        <div className="w-full mt-6">
+          <Description className="font-[600]">
+            Новый пароль <span className="text-red-600">*</span>
           </Description>
-          <div className="relative w-full flex items-center">
+
+          <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Новый пароль"
-              className="border p-2 flex rounded-[8px] outline-none w-full h-[40px] pr-10"
+              placeholder="Введите пароль"
+              className="border p-2 rounded-lg w-full mb-4 outline-none"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
+
             <button
               type="button"
-              className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-5 -translate-y-1/2 text-gray-500"
             >
               {showPassword ? (
                 <AiFillEye size={20} />
@@ -36,22 +87,27 @@ const Create_password = () => {
           </div>
         </div>
 
-        <div>
-          <Description>
-            Подтверждение пароля{" "}
-            <span className="text-[#E60000] font-[600]">*</span>
+        {/* Confirm */}
+        <div className="w-full">
+          <Description className="font-[600]">
+            Подтверждение пароля <span className="text-red-600">*</span>
           </Description>
-          <div className="relative w-full flex items-center">
+
+          <div className="relative">
             <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Подтверждение пароля"
-              className="border p-2 flex rounded-[8px] outline-none w-full h-[40px] pr-10"
+              type={showConfirm ? "text" : "password"}
+              placeholder="Введите пароль"
+              className="border p-2 rounded-lg w-full mb-4 outline-none"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
             />
+
             <button
               type="button"
-              className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500"
+              onClick={() => setShowConfirm(!showConfirm)}
+              className="absolute right-2 top-5 -translate-y-1/2 text-gray-500"
             >
-              {showPassword ? (
+              {showConfirm ? (
                 <AiFillEye size={20} />
               ) : (
                 <AiFillEyeInvisible size={20} />
@@ -60,14 +116,12 @@ const Create_password = () => {
           </div>
         </div>
 
-        <div className="flex justify-end w-full mt-2">
-          <Button type="button" className="md:!w-[178px] w-full">
-            Сохранить
-          </Button>
-        </div>
+        <Button disabled={isPending} className="md:!w-[100px] w-full">
+          {isPending ? "Сохранение..." : "Сохранить"}
+        </Button>
       </form>
     </div>
   );
 };
 
-export default Create_password;
+export default CreatePassword;

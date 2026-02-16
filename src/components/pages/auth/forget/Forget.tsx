@@ -1,67 +1,47 @@
 "use client";
-import { TitleComponent } from "@/components/ui/text/TitleComponent";
+
 import React, { useState } from "react";
-import { Description } from "@/components/ui/text/Description";
-import Button from "@/components/ui/button/Button";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import Link from "next/link";
-import { useForgotPassword } from "@/redux/hooks/auth";
-import Password_recovery from "./Password_recovery";
-import Create_password from "./Create_password";
+import PasswordRecovery from "./Password_recovery";
+// import CodeStep from "./CodeStep";
+import CreatePassword from "./Create_password";
+import CodeStep from "./CodeStep";
+import SuccessStep from "./SuccessStep";
+// import SuccessStep from "./SuccessStep";
 
 const Forget = () => {
-  const [showPassword, setShowPassword] = useState(false);
-
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
-  const { mutate, isPending } = useForgotPassword();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    mutate(email, {
-      onSuccess: () => {
-        alert("Письмо отправлено на почту");
-        setEmail("");
-      },
-      onError: () => {
-        alert("Ошибка отправки");
-      },
-    });
-  };
+  const [code, setCode] = useState("");
 
   return (
-    <section className="bg-[#F5F5F5] py-10 h-[200vh]">
-      <div className="flex justify-center flex-col items-center gap-4">
-        <Password_recovery />
+    <section className="bg-[#F5F5F5] py-10 px-4 h-[90vh] flex justify-center items-center">
+      {step === 1 && (
+        <PasswordRecovery
+          onSuccess={(emailValue) => {
+            setEmail(emailValue);
+            setStep(2);
+          }}
+        />
+      )}
 
-        <div className="bg-white border rounded-[12px] md:w-[425px] w-[90%] flex flex-col items-center gap-2 p-6">
-          <TitleComponent className="!text-[24px] w-full text-center">
-            Проверьте почту
-          </TitleComponent>
-          <Description>
-            Мы отправили ссылку для восстановления пароля
-          </Description>
-          <div className="flex justify-end w-full mt-2">
-            <Button type="button" className="md:!w-[200px] w-full">
-              <Link href="user">Вернуться на главную</Link>
-            </Button>
-          </div>
-        </div>
+      {step === 2 && (
+        <CodeStep
+          onSuccess={(codeValue) => {
+            setCode(codeValue);
+            setStep(3);
+          }}
+        />
+      )}
 
-        <Create_password />
+      {step === 3 && (
+        <CreatePassword
+          email={email}
+          resetCode={code}
+          onSuccess={() => setStep(4)}
+        />
+      )}
 
-        {/* Шаг 5: Вы успешно поменяли пароль */}
-        <div className="bg-white border rounded-[12px] md:w-[425px] w-[90%] flex flex-col items-center gap-2 p-6">
-          <TitleComponent className="!text-[24px] w-full text-center">
-            Вы успешно поменяли пароль!
-          </TitleComponent>
-          <div className="flex justify-end w-full mt-2">
-            <Button type="button" className="md:!w-[78px] w-full">
-              <Link href="user"> Войти</Link>
-            </Button>
-          </div>
-        </div>
-      </div>
+      {step === 4 && <SuccessStep />}
     </section>
   );
 };

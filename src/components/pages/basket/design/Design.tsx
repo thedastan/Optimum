@@ -142,18 +142,21 @@ const Design = () => {
             <input
               {...register("name", { required: true })}
               className="border p-2 rounded-[8px] w-full mb-3"
+              placeholder="Введите ФИО"
             />
 
             <Description>Телефон</Description>
             <input
               {...register("phone", { required: true })}
               className="border p-2 rounded-[8px] w-full mb-3"
+              placeholder="Введите номер телефона"
             />
 
-            <Description>WhatsApp</Description>
+            <Description>WhatsApp (необязательно)</Description>
             <input
               {...register("whatsapp")}
               className="border p-2 rounded-[8px] w-full mb-3"
+              placeholder="Введите WhatsApp (необязательно)"
             />
 
             <Button type="submit" className="w-full !bg-[#E60000]">
@@ -187,19 +190,24 @@ const Design = () => {
       {/* Success Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-[16px] relative w-[90%] max-w-md">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute right-4 top-4"
-            >
-              <IoMdClose />
-            </button>
+          <div className="bg-white p-6 rounded-[16px] md:w-[380px] w-[90%]">
+            <div className="w-full flex justify-between">
+              <Title className="!text-[20px]">Вы успешно оформили заказ!</Title>
+              <button onClick={() => setIsOpen(false)}>
+                <IoMdClose />
+              </button>
+            </div>
+            <Description className="mt-4">
+              В скором времени менеджер свяжется с Вами!
+            </Description>
 
-            <Title>Заказ оформлен!</Title>
-            <Description>Менеджер скоро свяжется с вами.</Description>
-
-            <Button className="mt-4 w-full !bg-[#E60000]">
-              <Link href="/">Продолжить</Link>
+            <Button className="mt-4 w-full">
+              <Link
+                className="w-full h-full flex items-center justify-center"
+                href="/"
+              >
+                Продолжить
+              </Link>
             </Button>
           </div>
         </div>

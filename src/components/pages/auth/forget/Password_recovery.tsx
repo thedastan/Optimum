@@ -1,12 +1,18 @@
+"use client";
+
+import React, { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import { Description } from "@/components/ui/text/Description";
 import { TitleComponent } from "@/components/ui/text/TitleComponent";
 import { useForgotPassword } from "@/redux/hooks/auth";
-import React, { useState } from "react";
+import { toast } from "alert-go";
+import "alert-go/dist/notifier.css";
 
-const Password_recovery = () => {
-  const [showPassword, setShowPassword] = useState(false);
+interface Props {
+  onSuccess: (email: string) => void;
+}
 
+const PasswordRecovery: React.FC<Props> = ({ onSuccess }) => {
   const [email, setEmail] = useState("");
   const { mutate, isPending } = useForgotPassword();
 
@@ -15,50 +21,49 @@ const Password_recovery = () => {
 
     mutate(email, {
       onSuccess: () => {
-        alert("Письмо отправлено на почту");
-        setEmail("");
+        toast.success("Письмо отправлено", {
+          position: "top-center",
+        });
+        onSuccess(email);
       },
-      onError: () => {
-        alert("Ошибка отправки");
-      },
+      onError: () => toast.error("Ошибка отправки", { position: "top-center" }),
     });
   };
 
   return (
-    <div className="bg-white border rounded-[12px] md:w-[425px] w-[90%] flex flex-col items-center gap-2 p-6">
-      <TitleComponent className="!text-[24px] w-full text-center">
+    <div className="bg-white rounded-[12px] p-6 md:w-[420px] w-full">
+      <TitleComponent className="text-center !text-[24px]">
         Восстановление пароля
       </TitleComponent>
-      <Description>Введите почту для восстановления пароля</Description>
-      <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4 mt-2">
-        <div>
-          <Description>
-            Email
-            <span className="text-[#E60000] font-[600]">*</span>
+
+      <Description className="text-center mt-3">
+        Введите почту для восстановления пароля
+      </Description>
+
+      <form className="w-full flex flex-col items-end" onSubmit={handleSubmit}>
+        <div className="w-full mt-6">
+          <Description className="font-[600]">
+            Email <span className="text-red-600">*</span>
           </Description>
-          <div className="relative w-full flex items-center">
-            <input
-              type="email"
-              placeholder="Введите вашу почту"
-              className="border p-2 flex rounded-[8px] outline-none w-full h-[40px] pr-10"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+          <input
+            type="email"
+            className="border p-2 rounded-lg w-full mb-4 outline-none"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
 
-        <div className="flex justify-end w-full mt-2">
-          <Button
-            type="submit"
-            disabled={isPending}
-            className="md:!w-[178px] w-full"
-          >
-            Отправить
-          </Button>
-        </div>
+        <Button
+          className="md:!w-[100px] w-full"
+          disabled={isPending}
+          type="submit"
+        >
+          {isPending ? "Отправка..." : "Отправить"}
+        </Button>
       </form>
     </div>
   );
 };
 
-export default Password_recovery;
+export default PasswordRecovery;

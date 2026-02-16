@@ -247,7 +247,10 @@ const Basket = () => {
 
               <div className="flex justify-end w-full mt-2">
                 <Button className="w-full !bg-[#E60000]">
-                  <Link className="w-full py-1" href="/basket/design">
+                  <Link
+                    className="w-full h-full flex justify-center items-center"
+                    href="/basket/design"
+                  >
                     Оформить заказ
                   </Link>
                 </Button>

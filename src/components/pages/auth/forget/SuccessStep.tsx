@@ -1,0 +1,28 @@
+"use client";
+
+import Button from "@/components/ui/button/Button";
+import { TitleComponent } from "@/components/ui/text/TitleComponent";
+import Link from "next/link";
+
+const SuccessStep = () => {
+  return (
+    <div className="bg-white rounded-[12px] p-6 md:w-[420px] w-full">
+      <TitleComponent className="text-center !text-[24px]">
+        Пароль успешно изменён
+      </TitleComponent>
+
+      <div className="w-full flex justify-end mt-6">
+        <Button className="md:!w-[100px] w-full">
+          <Link
+            className="w-full h-full flex items-center justify-center"
+            href="/"
+          >
+            Войти
+          </Link>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default SuccessStep;

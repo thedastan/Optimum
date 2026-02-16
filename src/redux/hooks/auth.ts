@@ -5,6 +5,7 @@ import {
   IUserLogin,
   IAuthResponse,
   IEditProfileRequest,
+  IVerifyResetCodeRequest,
 } from "../models/auth.model";
 
 export function useForgotPassword() {
@@ -44,6 +45,16 @@ export function useLogout() {
   return () => {
     authService.logout();
   };
+}
+
+export function useVerifyResetCode() {
+  return useMutation({
+    mutationFn: (data: {
+      email: string;
+      reset_code: string;
+      new_password: string;
+    }) => authService.verifyResetCode(data),
+  });
 }
 
 ///////////////

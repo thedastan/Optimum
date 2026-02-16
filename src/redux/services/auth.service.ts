@@ -7,6 +7,7 @@ import {
   IAuthResponse,
   IUserProfile,
   IEditProfileRequest,
+  IVerifyResetCodeRequest,
 } from "../models/auth.model";
 
 class AuthService {
@@ -19,7 +20,7 @@ class AuthService {
 
   async forgotPassword(data: IForgotPasswordRequest) {
     const response = await PUBLIC_API.post<IForgotPasswordResponse>(
-      `${this.BASE_URL}forgot-password`,
+      `.${this.BASE_URL}forgot-password`,
       data,
     );
     return response.data;
@@ -51,6 +52,14 @@ class AuthService {
   async editProfile(data: IEditProfileRequest): Promise<IUserProfile> {
     const response = await PRIVATE_API.put(
       `${this.BASE_URL}edit-profile`,
+      data,
+    );
+    return response.data;
+  }
+
+  async verifyResetCode(data: IVerifyResetCodeRequest) {
+    const response = await PUBLIC_API.post(
+      `${this.BASE_URL}verify-reset-code`,
       data,
     );
     return response.data;

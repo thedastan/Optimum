@@ -4,7 +4,7 @@ export const generateMetadata = ({
   description,
   url,
   image,
-  keywords = "Optimum", ////!
+  keywords = "Кузовные запчасти для ведущих автомобильных марок: Toyota, Hyundai, Geely, Chery, KIA, Chevrolet и других. Надежное качество и широкий выбор для вашего авто!", ////!
 }: {
   title: string;
   description: string;
@@ -55,14 +55,14 @@ export const generateMetadata = ({
 
 // Дополнительная функция для структурированных данных
 
-// export const generateStructuredData = () => ({
-// 	'@context': 'https://schema.org',
-// 	'@type': 'WebSite',
-// 	'name': 'Optimum', ////! Имя проекта
-// 	'url': 'https://next-structure-seven.vercel.app/', ////! url проекта
-// 	'potentialAction': {
-// 			'@type': 'SearchAction',
-// 			'target': 'https://next-structure-seven.vercel.app/search?q={search_term_string}', ////! Имя проекта
-// 			'query-input': 'required name=search_term_string'
-// 	}
-// });
+export const generateStructuredData = () => ({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Optimum", ////! Имя проекта
+  url: "https://optimum-kg.vercel.app/", ////! url проекта
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://optimum-kg.vercel.app/search?q={search_term_string}", ////! Имя проекта
+    "query-input": "required name=search_term_string",
+  },
+});
