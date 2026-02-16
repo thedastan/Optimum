@@ -14,20 +14,26 @@ interface Props {
 
 const PasswordRecovery: React.FC<Props> = ({ onSuccess }) => {
   const [email, setEmail] = useState("");
-  const { mutate, isPending } = useForgotPassword();
+  // const { mutate, isPending } = useForgotPassword();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { mutateAsync, isPending } = useForgotPassword();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    mutate(email, {
-      onSuccess: () => {
-        toast.success("Письмо отправлено", {
-          position: "top-center",
-        });
-        onSuccess(email);
-      },
-      onError: () => toast.error("Ошибка отправки", { position: "top-center" }),
-    });
+    try {
+      await mutateAsync(email);
+
+      toast.success("Письмо отправлено", {
+        position: "top-center",
+      });
+
+      onSuccess(email);
+    } catch {
+      toast.error("Ошибка отправки", {
+        position: "top-center",
+      });
+    }
   };
 
   return (

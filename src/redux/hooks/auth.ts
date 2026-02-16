@@ -8,12 +8,26 @@ import {
   IVerifyResetCodeRequest,
 } from "../models/auth.model";
 
+// export function useForgotPassword() {
+//   const { mutate, isPending, data, error } = useMutation({
+//     mutationFn: (email: string) => authService.forgotPassword({ email }),
+//   });
+
+//   return { mutate, isPending, data, error };
+// }
+
 export function useForgotPassword() {
-  const { mutate, isPending, data, error } = useMutation({
+  const mutation = useMutation({
     mutationFn: (email: string) => authService.forgotPassword({ email }),
   });
 
-  return { mutate, isPending, data, error };
+  return {
+    mutate: mutation.mutate,
+    mutateAsync: mutation.mutateAsync,
+    isPending: mutation.isPending,
+    data: mutation.data,
+    error: mutation.error,
+  };
 }
 
 export function useRegister() {

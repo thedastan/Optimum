@@ -17,8 +17,8 @@ export const generateMetadata = ({
   keywords,
   image,
   robots: "index, follow",
-  authors: [{ name: "Optimum" }], ////! Имя проекта
-  publisher: "Optimum", ////! Имя проекта
+  authors: [{ name: "Optimum" }],
+  publisher: "Optimum",
   viewport: "width=device-width, initial-scale=1.0",
   openGraph: {
     title,
@@ -26,7 +26,7 @@ export const generateMetadata = ({
     url,
     type: "website",
     locale: "ru_KG",
-    siteName: "Optimum", ////! Имя проекта
+    siteName: "Optimum",
     images: [
       {
         url: image,
@@ -58,11 +58,11 @@ export const generateMetadata = ({
 export const generateStructuredData = () => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Optimum", ////! Имя проекта
-  url: "https://optimum-kg.vercel.app/", ////! url проекта
+  name: "Optimum",
+  url: "https://optimum-kg.vercel.app/",
   potentialAction: {
     "@type": "SearchAction",
-    target: "https://optimum-kg.vercel.app/search?q={search_term_string}", ////! Имя проекта
+    target: "https://optimum-kg.vercel.app/search?q={search_term_string}",
     "query-input": "required name=search_term_string",
   },
 });
