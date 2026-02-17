@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useState, Suspense } from "react";
 import scss from "./LayoutPage.module.scss";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
@@ -32,7 +32,11 @@ export const LayoutPage: FC<LayoutPageProps> = ({ children }) => {
   return (
     <div className={scss.LayoutPage}>
       <QueryClientProvider client={client}>
-        <Header />
+        {/* Оборачиваем в Suspense для корректного билда Next.js */}
+        <Suspense fallback={<div className="h-[120px] bg-white w-full" />}>
+          <Header />
+        </Suspense>
+
         <main>{children}</main>
 
         {!hideFooter && <Footer />}
