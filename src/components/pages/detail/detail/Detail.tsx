@@ -33,6 +33,7 @@ const Detail = () => {
         : "";
 
   const { data, isLoading } = useProductBySlug(slug);
+  console.log(data, "data data");
 
   // ✅ Skeleton
   if (isLoading) {

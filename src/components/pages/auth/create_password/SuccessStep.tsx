@@ -11,11 +11,11 @@ const SuccessStep = () => {
         Пароль успешно изменён
       </TitleComponent>
 
-      <div className="w-full flex justify-end mt-6">
-        <Button className="md:!w-[100px] w-full">
+      <div className="mt-6">
+        <Button className="w-full">
           <Link
-            className="w-full h-full flex items-center justify-center"
-            href="/"
+            href="/login"
+            className="w-full flex justify-center items-center"
           >
             Войти
           </Link>

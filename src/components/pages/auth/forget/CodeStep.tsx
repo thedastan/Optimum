@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import { TitleComponent } from "@/components/ui/text/TitleComponent";
 import { Description } from "@/components/ui/text/Description";
+import Link from "next/link";
 
 interface Props {
   onSuccess: (code: string) => void;
@@ -13,29 +14,22 @@ const CodeStep: React.FC<Props> = ({ onSuccess }) => {
   const [code, setCode] = useState("");
 
   return (
-    <div className="bg-white rounded-[12px] p-6 md:w-[420px] w-full">
+    <div className="bg-white rounded-[12px] p-4 md:w-[420px] w-full">
       <TitleComponent className="text-center !text-[24px]">
-        Введите код из email
+        Проверьте почту
       </TitleComponent>
+      <Description className="mt-4">
+        Мы отправили ссылку для восстановления пароля
+      </Description>
 
-      <div className="w-full flex flex-col items-end">
-        <div className="w-full mt-6">
-          <Description className="font-[600]">
-            Код <span className="text-red-600">*</span>
-          </Description>
-
-          <input
-            className="border p-2 rounded-lg w-full mb-4 outline-none"
-            placeholder="Введите код из Email"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
-        </div>
-        <Button
-          className="md:!w-[120px] w-full"
-          onClick={() => onSuccess(code)}
-        >
-          Продолжить
+      <div className="w-full flex justify-end mt-6">
+        <Button className="md:!w-[180px] w-full">
+          <Link
+            className="w-full h-full flex items-center justify-center"
+            href="/"
+          >
+            Вернуться на главную
+          </Link>
         </Button>
       </div>
     </div>

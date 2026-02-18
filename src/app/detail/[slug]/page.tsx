@@ -13,7 +13,7 @@ export async function generateMetadata({
   const { slug } = await params;
 
   const res = await fetch(
-    `https://alimmah05.pythonanywhere.com/api/products/product/slug/${slug}`,
+    `https://alimmah05.pythonanywhere.com/api/products/product/${slug}`,
     {
       next: { revalidate: 60 },
     },

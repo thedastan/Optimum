@@ -3,27 +3,24 @@
 import React, { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import { TitleComponent } from "@/components/ui/text/TitleComponent";
-import { useVerifyResetCode } from "@/redux/hooks/auth";
+import { useResetPassword } from "@/redux/hooks/auth";
 import { Description } from "@/components/ui/text/Description";
-
 import { toast } from "alert-go";
 import "alert-go/dist/notifier.css";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 interface Props {
-  email: string;
-  resetCode: string;
+  token: string;
   onSuccess: () => void;
 }
 
-const CreatePassword: React.FC<Props> = ({ email, resetCode, onSuccess }) => {
+const CreatePasswordForm = ({ token, onSuccess }: Props) => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { mutateAsync, isPending } = useVerifyResetCode();
+  const { mutateAsync, isPending } = useResetPassword();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,14 +37,19 @@ const CreatePassword: React.FC<Props> = ({ email, resetCode, onSuccess }) => {
 
     try {
       await mutateAsync({
-        email,
-        reset_code: resetCode,
         new_password: password,
+        token,
+      });
+
+      toast.success("Пароль успешно изменён", {
+        position: "top-center",
       });
 
       onSuccess();
     } catch {
-      toast.error("Ошибка смены пароля", { position: "top-center" });
+      toast.error("Ошибка смены пароля", {
+        position: "top-center",
+      });
     }
   };
 
@@ -58,17 +60,14 @@ const CreatePassword: React.FC<Props> = ({ email, resetCode, onSuccess }) => {
       </TitleComponent>
 
       <form className="w-full flex flex-col items-end" onSubmit={handleSubmit}>
-        {/* Password */}
         <div className="w-full mt-6">
-          <Description className="font-[600]">
-            Новый пароль <span className="text-red-600">*</span>
-          </Description>
+          <Description className="font-[600]">Новый пароль *</Description>
 
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Введите пароль"
               className="border p-2 rounded-lg w-full mb-4 outline-none"
+              placeholder="Введите пароль"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -76,28 +75,23 @@ const CreatePassword: React.FC<Props> = ({ email, resetCode, onSuccess }) => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 top-5 -translate-y-1/2 text-gray-500"
+              className="absolute right-2 top-5 -translate-y-1/2"
             >
-              {showPassword ? (
-                <AiFillEye size={20} />
-              ) : (
-                <AiFillEyeInvisible size={20} />
-              )}
+              {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
           </div>
         </div>
 
-        {/* Confirm */}
         <div className="w-full">
           <Description className="font-[600]">
-            Подтверждение пароля <span className="text-red-600">*</span>
+            Подтверждение пароля *
           </Description>
 
           <div className="relative">
             <input
               type={showConfirm ? "text" : "password"}
-              placeholder="Введите пароль"
               className="border p-2 rounded-lg w-full mb-4 outline-none"
+              placeholder="Введите пароль"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
             />
@@ -105,18 +99,14 @@ const CreatePassword: React.FC<Props> = ({ email, resetCode, onSuccess }) => {
             <button
               type="button"
               onClick={() => setShowConfirm(!showConfirm)}
-              className="absolute right-2 top-5 -translate-y-1/2 text-gray-500"
+              className="absolute right-2 top-5 -translate-y-1/2"
             >
-              {showConfirm ? (
-                <AiFillEye size={20} />
-              ) : (
-                <AiFillEyeInvisible size={20} />
-              )}
+              {showConfirm ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
           </div>
         </div>
 
-        <Button disabled={isPending} className="md:!w-[100px] w-full">
+        <Button disabled={isPending} className="w-full md:!w-[120px]">
           {isPending ? "Сохранение..." : "Сохранить"}
         </Button>
       </form>
@@ -124,4 +114,4 @@ const CreatePassword: React.FC<Props> = ({ email, resetCode, onSuccess }) => {
   );
 };
 
-export default CreatePassword;
+export default CreatePasswordForm;

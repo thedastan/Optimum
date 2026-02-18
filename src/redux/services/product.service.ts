@@ -13,7 +13,7 @@ class ProductService {
 
   async getProductBySlug(slug: string) {
     const response = await PUBLIC_API.get<IProduct>(
-      `${this.BASE_URL}product/slug/${slug}`,
+      `${this.BASE_URL}/product/${slug}`,
     );
     return response.data;
   }

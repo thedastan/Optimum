@@ -50,10 +50,9 @@ export interface IUserProfile {
   whatsapp?: string;
 }
 
-export interface IVerifyResetCodeRequest {
-  email: string;
-  reset_code: string;
+export interface IResetPasswordRequest {
   new_password: string;
+  token: string;
 }
 
 ///////////////

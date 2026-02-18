@@ -5,16 +5,8 @@ import {
   IUserLogin,
   IAuthResponse,
   IEditProfileRequest,
-  IVerifyResetCodeRequest,
+  IResetPasswordRequest,
 } from "../models/auth.model";
-
-// export function useForgotPassword() {
-//   const { mutate, isPending, data, error } = useMutation({
-//     mutationFn: (email: string) => authService.forgotPassword({ email }),
-//   });
-
-//   return { mutate, isPending, data, error };
-// }
 
 export function useForgotPassword() {
   const mutation = useMutation({
@@ -61,13 +53,10 @@ export function useLogout() {
   };
 }
 
-export function useVerifyResetCode() {
+export function useResetPassword() {
   return useMutation({
-    mutationFn: (data: {
-      email: string;
-      reset_code: string;
-      new_password: string;
-    }) => authService.verifyResetCode(data),
+    mutationFn: (data: IResetPasswordRequest) =>
+      authService.resetPassword(data),
   });
 }
 
