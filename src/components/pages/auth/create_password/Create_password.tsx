@@ -1,29 +1,3 @@
-// "use client";
-
-// import React, { useState } from "react";
-// import { useSearchParams } from "next/navigation";
-// import SuccessStep from "../create_password/SuccessStep";
-// import CreatePasswordForm from "../create_password/CreatePasswordForm";
-
-// const Create_password = () => {
-//   const [step, setStep] = useState(1);
-
-//   const searchParams = useSearchParams();
-//   const token = searchParams.get("token") || "";
-
-//   return (
-//     <section className="bg-[#F5F5F5] py-10 px-4 h-[90vh] flex justify-center items-center">
-//       {step === 1 && (
-//         <CreatePasswordForm token={token} onSuccess={() => setStep(2)} />
-//       )}
-
-//       {step === 2 && <SuccessStep />}
-//     </section>
-//   );
-// };
-
-// export default Create_password;
-
 "use client";
 
 import React, { useState, Suspense } from "react";
