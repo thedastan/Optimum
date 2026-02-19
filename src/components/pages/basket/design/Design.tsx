@@ -159,13 +159,32 @@ const Design = () => {
               placeholder="Введите WhatsApp (необязательно)"
             />
 
+            <div className="border p-2 rounded-[8px] w-full mb-3 bg-[#E8E8E8]">
+              <Description className="flex gap-1">
+                Подтверждая заказ вы принимаете
+                <Link
+                  className="text-[#3188DE] border-b border-[#3188DE] h-5"
+                  href="/privacy-and-rights/privacy-policy"
+                >
+                  Правила
+                </Link>
+                и
+                <Link
+                  className="text-[#3188DE] border-b border-[#3188DE] h-5"
+                  href="/privacy-and-rights/privacy-policy"
+                >
+                  Условия сайта
+                </Link>
+              </Description>
+            </div>
+
             <Button type="submit" className="w-full !bg-[#E60000]">
               Подтвердить заказ
             </Button>
           </div>
 
           {/* ORDER SUMMARY */}
-          <div className="bg-white border rounded-[12px] w-full md:w-[550px] p-6">
+          <div className="bg-white border rounded-[12px] w-full md:w-[550px] h-full p-6">
             {cart.map((el, i) => (
               <div key={i} className="border-b pb-3 mb-3">
                 <Description>{el.product_name}</Description>
