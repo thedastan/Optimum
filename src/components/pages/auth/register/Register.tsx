@@ -7,6 +7,9 @@ import { useState } from "react";
 import { useLogin, useRegister } from "@/redux/hooks/auth";
 import { useRouter } from "next/navigation";
 
+import PhoneInput from "phone-go";
+import "phone-go/dist/phone-go.css";
+
 import { toast } from "alert-go";
 import "alert-go/dist/notifier.css";
 
@@ -129,11 +132,19 @@ const Register = () => {
                 Номер телефона{" "}
                 <span className="text-[#E60000] font-[600]">*</span>
               </Description>
-              <input
+              {/* <input
                 placeholder="Телефон"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 className="border p-2 rounded-[8px] h-[40px] w-full outline-none"
+              /> */}
+
+              <PhoneInput
+                className="my-phone-input"
+                value={phoneNumber}
+                onChange={(value) => setPhoneNumber(value)}
+                defaultCountry="KG"
+                placeholder="Телефон"
               />
             </div>
 

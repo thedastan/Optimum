@@ -8,13 +8,17 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import axios from "axios";
 import { PRIVATE_API } from "@/api/interceptors";
 
 import { getCart, ICartItem } from "@/components/shared/utils/cartStorage";
 import { useMyData } from "@/redux/hooks/auth";
 import { useSearchParams } from "next/navigation";
+
+import PhoneInput from "phone-go";
+import "phone-go/dist/phone-go.css";
+import "alert-go/dist/notifier.css";
 
 interface IFormTelegram {
   name: string;
@@ -28,7 +32,10 @@ const Design = () => {
 
   const params = useSearchParams();
   const { data: user } = useMyData();
-  const { register, handleSubmit, reset, setValue } = useForm<IFormTelegram>();
+  // const { register, handleSubmit, reset, setValue } = useForm<IFormTelegram>();
+
+  const { register, handleSubmit, reset, setValue, control } =
+    useForm<IFormTelegram>();
 
   // Получаем товар с детальной страницы через query
   const singleProduct = params.get("product")
@@ -73,7 +80,7 @@ const Design = () => {
     messageTG += `👤 Name: <b>${data.name}</b>\n`;
     messageTG += `📞 Phone: <b>${data.phone}</b>\n`;
     messageTG += `💬 WhatsApp: <b>${data.whatsapp}</b>\n\n`;
-    messageTG += `<b>📦 Товары:</b>\n`;
+    messageTG += `<b> Товары:</b>\n`;
 
     cart.forEach((el) => {
       messageTG += `• ${el.product_name}\n`;
@@ -81,7 +88,7 @@ const Design = () => {
       messageTG += `   Артикул: ${el.article}\n\n`;
     });
 
-    messageTG += `💰 <b>Итого: ${totalPrice}c</b>`;
+    messageTG += ` <b>Итого: ${totalPrice}c</b>`;
     return messageTG;
   };
 
@@ -145,18 +152,47 @@ const Design = () => {
               placeholder="Введите ФИО"
             />
 
-            <Description>Телефон</Description>
+            {/* <Description>Телефон</Description>
             <input
               {...register("phone", { required: true })}
               className="border p-2 rounded-[8px] w-full mb-3"
               placeholder="Введите номер телефона"
+            /> */}
+
+            <Description>Телефон</Description>
+            <Controller
+              name="phone"
+              control={control}
+              rules={{ required: "Введите номер телефона" }}
+              render={({ field }) => (
+                <PhoneInput
+                  {...field}
+                  defaultCountry="KG"
+                  placeholder="000-000-000"
+                  className="my-phone-input mt-1 mb-3"
+                />
+              )}
             />
 
             <Description>WhatsApp (необязательно)</Description>
-            <input
+            {/* <input
               {...register("whatsapp")}
               className="border p-2 rounded-[8px] w-full mb-3"
               placeholder="Введите WhatsApp (необязательно)"
+            /> */}
+
+            <Controller
+              name="whatsapp"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  {...field}
+                  value={field.value || ""}
+                  defaultCountry="KG"
+                  placeholder="000-000-000"
+                  className="my-phone-input mt-1 mb-3"
+                />
+              )}
             />
 
             <div className="border p-2 rounded-[8px] w-full mb-3 bg-[#E8E8E8]">

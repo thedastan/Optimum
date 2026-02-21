@@ -64,3 +64,36 @@ body {
   text-align: center !important;
   width: 260px;
 }
+
+.my-phone-input {
+  // 1. Растягиваем сам контейнер
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  align-items: center;
+
+  // 2. Стилизуем под остальные ваши инпуты (белый фон, серая рамка)
+  background: white !important;
+  border: 1px solid #e5e7eb !important; // Цвет стандартной border в Tailwind
+  border-radius: 8px !important;
+  height: 40px !important;
+  overflow: hidden;
+
+  // 3. Растягиваем внутренний инпут библиотеки
+  input {
+    flex: 1 1 auto !important; // Заставляет инпут занять все свободное место
+    width: 100% !important;
+    background: transparent !important;
+    color: black !important; // Текст черный, как в ФИО
+    border: none !important; // Убираем внутренние рамки
+    outline: none !important;
+    padding: 0 10px !important;
+    height: 100% !important;
+  }
+
+  // 4. Линия-разделитель после флага (если нужна)
+  .phone-go-flag-container {
+    border-right: 1px solid #e5e7eb !important;
+    padding: 0 8px !important;
+  }
+}

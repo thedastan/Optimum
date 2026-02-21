@@ -13,10 +13,7 @@ const SuccessStep = () => {
 
       <div className="mt-6">
         <Button className="w-full">
-          <Link
-            href="/login"
-            className="w-full flex justify-center items-center"
-          >
+          <Link href="/" className="w-full flex justify-center items-center">
             Войти
           </Link>
         </Button>

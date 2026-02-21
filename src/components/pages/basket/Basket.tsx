@@ -3,6 +3,7 @@ import { Description } from "@/components/ui/text/Description";
 import { Title } from "@/components/ui/text/Title";
 import { TitleComponent } from "@/components/ui/text/TitleComponent";
 import { BsCart3 } from "react-icons/bs";
+import basket_image from "@/assets/images/basket_image.png";
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -103,6 +104,39 @@ const Basket = () => {
               <div className="flex justify-end w-full mt-2">
                 <div className="h-10 w-full bg-gray-200 rounded" />
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Если корзина пустая
+  if (cart.length === 0) {
+    return (
+      <section className="pb-[20px] md:pb-[50px]">
+        <div className="container">
+          <div className="flex justify-center mt-3">
+            <div className="w-[500px] flex flex-col items-center justify-center gap-4">
+              <div className="w-[300px] h-[300px] overflow-hidden">
+                <Image
+                  className="w-full h-full object-cover"
+                  src={basket_image}
+                  alt="img"
+                />
+              </div>
+              <TitleComponent>Корзина пуста</TitleComponent>
+              <Description>
+                Начните добавлять товары и наслаждайтесь покупками!
+              </Description>
+              <Button className="!w-[300px]">
+                <Link
+                  className="w-full flex justify-center items-center h-10"
+                  href="/catalog"
+                >
+                  Перейти в каталог
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -216,6 +250,7 @@ const Basket = () => {
                       onClick={() => {
                         removeFromCart(el.id);
                         refresh();
+                        window.dispatchEvent(new Event("cart-updated"));
                       }}
                       className="!w-[40px] !bg-white border !text-[20px] !text-black flex items-center gap-2 hover:!bg-[#E60000] hover:!text-white transition-all duration-200"
                     >

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Description } from "@/components/ui/text/Description";
 import { Title } from "@/components/ui/text/Title";
 import { TitleComponent } from "@/components/ui/text/TitleComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper";
@@ -15,13 +15,30 @@ import "swiper/css/thumbs";
 
 import { BsCart3 } from "react-icons/bs";
 import { useProductBySlug } from "@/redux/hooks/product";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/ui/button/Button";
-import { addToCart } from "@/components/shared/utils/cartStorage";
+import { addToCart, getCart } from "@/components/shared/utils/cartStorage";
 import Link from "next/link";
 
 const Detail = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+
+  const router = useRouter();
+
+  const [cart, setCart] = useState<any[]>([]);
+
+  useEffect(() => {
+    const updateCart = () => {
+      setCart(getCart());
+    };
+
+    updateCart(); // при первом рендере
+    window.addEventListener("cart-updated", updateCart);
+
+    return () => {
+      window.removeEventListener("cart-updated", updateCart);
+    };
+  }, []);
 
   const params = useParams();
 
@@ -79,6 +96,7 @@ const Detail = () => {
 
   const el = data;
   const finalPrice = el.price - el.discount;
+  const isInCart = cart.some((item) => item.id === el.id);
 
   return (
     <section className="py-6">
@@ -182,6 +200,12 @@ const Detail = () => {
                 <Button
                   onClick={(e) => {
                     e.preventDefault();
+
+                    if (isInCart) {
+                      router.push("/basket");
+                      return;
+                    }
+
                     addToCart({
                       id: el.id,
                       product_name: el.product_name,
@@ -192,10 +216,13 @@ const Detail = () => {
                       images: el.images,
                       quantity: 1,
                     });
+                    setCart(getCart());
+                    window.dispatchEvent(new Event("cart-updated"));
                   }}
                   className="flex items-center gap-2 mt-auto"
                 >
-                  <BsCart3 /> В корзину
+                  {isInCart ? "Перейти в" : "В корзину"}
+                  <BsCart3 />
                 </Button>
 
                 <Button className="w-full !bg-[#E60000]">

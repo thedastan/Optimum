@@ -6,17 +6,17 @@ import Image from "next/image";
 import Button from "@/components/ui/button/Button";
 import { Title } from "@/components/ui/text/Title";
 import { Description } from "@/components/ui/text/Description";
-import { BsCart3 } from "react-icons/bs";
-import { LuUserRound } from "react-icons/lu";
-import { GoHome } from "react-icons/go";
 import Link from "next/link";
 import {
+  LOCATION,
   LOCATION_LINK,
   PHONE_NUMBER,
   PHONE_NUMBER_LINK,
 } from "@/constants/admin";
 
 const Footer = () => {
+  new Date().getFullYear();
+
   return (
     <footer className="md:pb-[50px] pb-[10px] pt-[30px]">
       <div className="flex">
@@ -32,7 +32,13 @@ const Footer = () => {
                   <Image src={whatsapp} alt="img" />
                 </div>
 
-                <Button className="md:flex hidden">Построить маршрут</Button>
+                <Link
+                  target="_blank"
+                  className="w-full h-10 flex items-center justify-center"
+                  href={LOCATION_LINK}
+                >
+                  <Button className="md:flex hidden">Построить маршрут</Button>
+                </Link>
               </div>
 
               <div className="flex gap-6 md:flex-row flex-col">
@@ -52,11 +58,12 @@ const Footer = () => {
                       Телефон: {PHONE_NUMBER}
                     </Description>
                   </Link>
-                  <Link href={LOCATION_LINK}>
-                    <Description className="!w-[270px] first-line:">
-                      Адрес: Бишкек, IT HUB 'Technopark', Горького 1/2, <br /> 2
-                      этаж
-                    </Description>
+                  <Link
+                    className="!w-[270px] first-line:"
+                    target="_blank"
+                    href={LOCATION_LINK}
+                  >
+                    {LOCATION}
                   </Link>
                 </div>
               </div>
@@ -66,14 +73,20 @@ const Footer = () => {
                 <Description className="!text-[#3e3f41]">
                   Свяжитесь с нами для заказа
                 </Description>
-                <Button className="!w-[110px]">Связаться</Button>
+                <Link
+                  target="_blank"
+                  href={PHONE_NUMBER_LINK}
+                  className="!w-[110px]"
+                >
+                  <Button className="!w-[110px]">Связаться</Button>
+                </Link>
               </div>
             </div>
             <div className="bg-[#CDD5DF] w-full h-[0.8px]"></div>
             <div className="w-full flex justify-center">
               <Description className="text-[#697586] !text-[12px]">
-                Copyright ©2025 ALFA Optimum LLC, Все права защищены.
-                Зарегистрировано в Министерстве юстиции КР
+                Copyright ©{new Date().getFullYear()} ALFA Optimum LLC, Все
+                права защищены. Зарегистрировано в Министерстве юстиции КР
               </Description>
             </div>
           </div>

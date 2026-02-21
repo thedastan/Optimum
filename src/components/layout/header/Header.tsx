@@ -27,11 +27,13 @@ import { useLogout } from "@/redux/hooks/auth";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { toast } from "alert-go";
 import "alert-go/dist/notifier.css";
+import { getCart } from "@/components/shared/utils/cartStorage";
 
 const Header = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const logout = useLogout();
+  const [cartCount, setCartCount] = useState(0);
 
   const [isAuth, setIsAuth] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -50,6 +52,7 @@ const Header = () => {
     };
     checkAuth();
     window.addEventListener("auth-changed", checkAuth);
+
     return () => window.removeEventListener("auth-changed", checkAuth);
   }, []);
 
@@ -64,6 +67,21 @@ const Header = () => {
     setSearchQuery("");
     router.push(PAGE.HOME);
   };
+
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cart = getCart() || [];
+
+      const count = cart.reduce((acc, el) => acc + el.quantity, 0);
+
+      setCartCount(count);
+    };
+
+    updateCartCount();
+    window.addEventListener("cart-updated", updateCartCount);
+
+    return () => window.removeEventListener("cart-updated", updateCartCount);
+  }, []);
 
   return (
     <header className="w-full top-0 left-0 sticky bg-white z-50">
@@ -97,7 +115,12 @@ const Header = () => {
       </div>
 
       <div className="border-b py-3">
-        <div className="container flex justify-between items-center gap-[24px]">
+        <div className="container flex justify-between items-center gap-[10px] md:gap-[24px]">
+          <Button className="!w-[50px] flex md:hidden bg-[#E60000]">
+            <Link className="flex items-center text-[20px]" href={PAGE.CATALOG}>
+              <AiOutlineAppstore />
+            </Link>
+          </Button>
           <Button className="!w-[250px] md:flex hidden bg-[#E60000]">
             <Link className="flex gap-2 items-center" href={PAGE.CATALOG}>
               <AiOutlineAppstore /> Каталог запчастей
@@ -138,8 +161,17 @@ const Header = () => {
 
           <div className="md:flex hidden gap-[10px]">
             <Link href={PAGE.BASKET}>
-              <button className="w-[40px] h-[40px] border rounded-[8px] flex items-center justify-center">
+              <button className="relative w-[40px] h-[40px] border rounded-[8px] flex items-center justify-center">
                 <BsCart3 />
+
+                {cartCount > 0 && (
+                  <span
+                    className="absolute -top-2 -right-2 bg-red-600 text-white text-[12px]
+min-w-[18px] h-[18px] flex items-center justify-center rounded-full px-[4px]"
+                  >
+                    {cartCount}
+                  </span>
+                )}
               </button>
             </Link>
 

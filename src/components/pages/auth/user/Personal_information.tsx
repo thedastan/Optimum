@@ -5,6 +5,12 @@ import { useEditProfile, useMyData } from "@/redux/hooks/auth";
 import { useOrders } from "@/redux/hooks/order";
 import React, { useEffect, useState } from "react";
 
+import PhoneInput from "phone-go";
+import "phone-go/dist/phone-go.css";
+
+import { toast } from "alert-go";
+import "alert-go/dist/notifier.css";
+
 const Personal_information = () => {
   const [isSend, setIsSend] = useState(false);
 
@@ -68,15 +74,22 @@ const Personal_information = () => {
             className="border p-2 rounded-[8px] outline-none w-full h-[40px] mt-1"
           />
         </div>
-        <div>
+        <div className=" ">
           <Description>Номер телефона</Description>
-          <input
+          <PhoneInput
+            className="my-phone-input mt-1"
+            value={form.phone_number}
+            onChange={(value) => setForm({ ...form, phone_number: value })}
+            defaultCountry="KG"
+            placeholder="Телефон"
+          />
+          {/* <input
             name="phone_number"
             value={form.phone_number}
             onChange={handleChange}
             placeholder="Номер телефона"
             className="border p-2 rounded-[8px] outline-none w-full h-[40px] mt-1"
-          />
+          /> */}
         </div>
         <div>
           <Description>Email</Description>

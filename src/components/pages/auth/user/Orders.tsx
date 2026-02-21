@@ -3,6 +3,7 @@ import { Description } from "@/components/ui/text/Description";
 import { Title } from "@/components/ui/text/Title";
 import { TitleComponent } from "@/components/ui/text/TitleComponent";
 import { BsCart3 } from "react-icons/bs";
+import order_image from "@/assets/images/basket_image.png";
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -14,6 +15,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { useMyData } from "@/redux/hooks/auth";
 import { useOrders } from "@/redux/hooks/order";
+import Button from "@/components/ui/button/Button";
+import Link from "next/link";
 
 const Orders = () => {
   const { data, isPending } = useMyData();
@@ -63,6 +66,38 @@ const Orders = () => {
           </div>
         ))}
       </div>
+    );
+  }
+
+  if (!orders || orders.length === 0) {
+    return (
+      <section className="pb-[20px] md:pb-[50px]">
+        <div className="container">
+          <div className="flex justify-center mt-3">
+            <div className="w-[500px] flex flex-col items-center justify-center gap-4">
+              <div className="w-[300px] h-[300px] overflow-hidden">
+                <Image
+                  className="w-full h-full object-cover"
+                  src={order_image}
+                  alt="img"
+                />
+              </div>
+              <TitleComponent>История заказов пуста</TitleComponent>
+              <Description>
+                Сделайте первый заказ и он появится здесь.
+              </Description>
+              <Button className="!w-[300px]">
+                <Link
+                  className="w-full flex justify-center items-center h-10"
+                  href="/catalog"
+                >
+                  Перейти в каталог
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 
