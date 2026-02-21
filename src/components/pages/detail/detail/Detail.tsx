@@ -95,7 +95,6 @@ const Detail = () => {
   if (!data) return null;
 
   const el = data;
-  const finalPrice = el.price - el.discount;
   const isInCart = cart.some((item) => item.id === el.id);
 
   return (
@@ -187,12 +186,10 @@ const Detail = () => {
                 <Title>Цена:</Title>
 
                 <div className="flex gap-2">
-                  {el.discount > 0 && (
-                    <Title className="line-through text-[#747474]">
-                      {el.price} с
-                    </Title>
-                  )}
-                  <Title>{finalPrice} с</Title>
+                  <Title className="line-through text-[#747474]">
+                    {el.price} с
+                  </Title>
+                  <Title className="">{el.discount} с</Title>
                 </div>
               </div>
 

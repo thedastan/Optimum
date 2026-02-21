@@ -121,7 +121,9 @@ const Card = () => {
                       )}
                     </div>
 
-                    <Description>АРТИКУЛ: {el.article}</Description>
+                    <Description className="!text-[12px]">
+                      АРТИКУЛ: {el.article}
+                    </Description>
                   </div>
 
                   <Button

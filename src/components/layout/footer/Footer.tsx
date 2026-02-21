@@ -19,7 +19,7 @@ const Footer = () => {
 
   return (
     <footer className="md:pb-[50px] pb-[10px] pt-[30px]">
-      <div className="flex">
+      <div className="hidden md:flex">
         <div className="container">
           <div className="w-full flex flex-col md:gap-[50px] gap-[20px]">
             <div className="flex md:flex-row flex-col justify-between gap-[30px] md:gap-0">

@@ -5,7 +5,7 @@ import { Title } from "@/components/ui/text/Title";
 import { TitleComponent } from "@/components/ui/text/TitleComponent";
 import Button from "@/components/ui/button/Button";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { IoMdClose } from "react-icons/io";
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -18,7 +18,6 @@ import { useSearchParams } from "next/navigation";
 
 import PhoneInput from "phone-go";
 import "phone-go/dist/phone-go.css";
-import "alert-go/dist/notifier.css";
 
 interface IFormTelegram {
   name: string;
@@ -28,39 +27,52 @@ interface IFormTelegram {
 
 const Design = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [cart, setCart] = useState<ICartItem[]>([]);
-
   const params = useSearchParams();
   const { data: user } = useMyData();
-  // const { register, handleSubmit, reset, setValue } = useForm<IFormTelegram>();
 
-  const { register, handleSubmit, reset, setValue, control } =
-    useForm<IFormTelegram>();
+  /**
+   * Мемоизированный singleProduct
+   * Теперь не создаётся новый объект на каждый рендер
+   */
+  const singleProduct = useMemo(() => {
+    const productParam = params.get("product");
+    return productParam ? JSON.parse(productParam) : null;
+  }, [params]);
 
-  // Получаем товар с детальной страницы через query
-  const singleProduct = params.get("product")
-    ? JSON.parse(params.get("product")!)
-    : null;
+  /**
+   * Инициализация корзины сразу
+   * Без useEffect → без зацикливания
+   */
+  const [cart, setCart] = useState<ICartItem[]>(() =>
+    singleProduct ? [singleProduct] : getCart(),
+  );
 
-  // Инициализация корзины
+  /**
+   * Если меняется query — обновляем корзину
+   */
   useEffect(() => {
     if (singleProduct) {
-      setCart((prev) =>
-        prev[0]?.id !== singleProduct.id ? [singleProduct] : prev,
-      );
+      setCart([singleProduct]);
     } else {
-      const cartData = getCart();
-      setCart((prev) => {
-        if (prev.length !== cartData.length) return cartData;
-        for (let i = 0; i < prev.length; i++) {
-          if (prev[i].id !== cartData[i].id) return cartData;
-        }
-        return prev;
-      });
+      setCart(getCart());
     }
   }, [singleProduct]);
 
-  // Автозаполнение формы если пользователь авторизован
+  /**
+   * React Hook Form
+   */
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<IFormTelegram>();
+
+  /**
+   * Автозаполнение если пользователь авторизован
+   */
   useEffect(() => {
     if (user) {
       setValue("name", user.first_name || "");
@@ -74,13 +86,19 @@ const Design = () => {
     0,
   );
 
-  // Формируем сообщение для Telegram
+  /**
+   * Формирование сообщения
+   */
   const messageModel = (data: IFormTelegram) => {
     let messageTG = `🧾 <b>Новый заказ</b>\n\n`;
     messageTG += `👤 Name: <b>${data.name}</b>\n`;
     messageTG += `📞 Phone: <b>${data.phone}</b>\n`;
-    messageTG += `💬 WhatsApp: <b>${data.whatsapp}</b>\n\n`;
-    messageTG += `<b> Товары:</b>\n`;
+
+    if (data.whatsapp) {
+      messageTG += `💬 WhatsApp: <b>${data.whatsapp}</b>\n`;
+    }
+
+    messageTG += `\n<b>Товары:</b>\n`;
 
     cart.forEach((el) => {
       messageTG += `• ${el.product_name}\n`;
@@ -88,14 +106,15 @@ const Design = () => {
       messageTG += `   Артикул: ${el.article}\n\n`;
     });
 
-    messageTG += ` <b>Итого: ${totalPrice}c</b>`;
+    messageTG += `<b>Итого: ${totalPrice}c</b>`;
     return messageTG;
   };
 
-  // Отправка заказа
+  /**
+   * Отправка
+   */
   const onSubmit: SubmitHandler<IFormTelegram> = async (data) => {
     try {
-      // Telegram
       await axios.post(
         `https://api.telegram.org/bot${process.env.NEXT_PUBLIC_TG_TOKEN}/sendMessage`,
         {
@@ -105,8 +124,8 @@ const Design = () => {
         },
       );
 
-      // API заказ если авторизован
       const token = localStorage.getItem("access_token");
+
       if (token && user) {
         for (const item of cart) {
           await PRIVATE_API.post("/orders/", {
@@ -126,61 +145,52 @@ const Design = () => {
 
   return (
     <section className="pb-[20px] md:pb-[50px]">
-      <div className="w-full border-b py-4">
-        <div className="container">
-          <Description className="!text-[#313131]">
-            Главная / Корзина
-          </Description>
-        </div>
-      </div>
-
-      <div className="container">
-        <div className="w-full py-4">
-          <TitleComponent>Корзина</TitleComponent>
-        </div>
+      <div className="container py-4">
+        <TitleComponent>Корзина</TitleComponent>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col-reverse md:flex-row gap-6"
+          className="flex flex-col-reverse md:flex-row gap-6 mt-6"
         >
           {/* FORM */}
           <div className="bg-white rounded-[12px] w-full p-4">
             <Description>ФИО</Description>
             <input
-              {...register("name", { required: true })}
-              className="border p-2 rounded-[8px] w-full mb-3"
+              {...register("name", { required: "Заполните поле" })}
+              className={`border p-2 rounded-[8px] w-full mb-1 outline-none ${
+                errors.name ? "border-red-500" : ""
+              }`}
               placeholder="Введите ФИО"
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mb-2">{errors.name.message}</p>
+            )}
 
-            {/* <Description>Телефон</Description>
-            <input
-              {...register("phone", { required: true })}
-              className="border p-2 rounded-[8px] w-full mb-3"
-              placeholder="Введите номер телефона"
-            /> */}
-
-            <Description>Телефон</Description>
+            <Description className="mt-3">Номер телефона</Description>
             <Controller
               name="phone"
               control={control}
-              rules={{ required: "Введите номер телефона" }}
+              rules={{ required: "Заполните поле" }}
               render={({ field }) => (
-                <PhoneInput
-                  {...field}
-                  defaultCountry="KG"
-                  placeholder="000-000-000"
-                  className="my-phone-input mt-1 mb-3"
-                />
+                <>
+                  <PhoneInput
+                    {...field}
+                    defaultCountry="KG"
+                    placeholder="000-000-000"
+                    className="my-phone-input mt-1"
+                  />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm mt-1 mb-2">
+                      {errors.phone.message}
+                    </p>
+                  )}
+                </>
               )}
             />
 
-            <Description>WhatsApp (необязательно)</Description>
-            {/* <input
-              {...register("whatsapp")}
-              className="border p-2 rounded-[8px] w-full mb-3"
-              placeholder="Введите WhatsApp (необязательно)"
-            /> */}
-
+            <Description className="mt-3">
+              Номер WhatsApp (необязательно)
+            </Description>
             <Controller
               name="whatsapp"
               control={control}
@@ -196,37 +206,36 @@ const Design = () => {
             />
 
             <div className="border p-2 rounded-[8px] w-full mb-3 bg-[#E8E8E8]">
-              <Description className="flex gap-1">
+              <Description className="flex gap-1 flex-col md:flex-row">
                 Подтверждая заказ вы принимаете
-                <Link
-                  className="text-[#3188DE] border-b border-[#3188DE] h-5"
-                  href="/privacy-and-rights/privacy-policy"
-                >
-                  Правила
-                </Link>
-                и
-                <Link
-                  className="text-[#3188DE] border-b border-[#3188DE] h-5"
-                  href="/privacy-and-rights/privacy-policy"
-                >
-                  Условия сайта
-                </Link>
+                <div className="flex gap-2">
+                  <Link
+                    className="text-[#3188DE] border-b border-[#3188DE] h-5"
+                    href="/privacy-and-rights/privacy-policy"
+                  >
+                    Правила
+                  </Link>
+                  и
+                  <Link
+                    className="text-[#3188DE] border-b border-[#3188DE] h-5"
+                    href="/privacy-and-rights/privacy-policy"
+                  >
+                    Условия сайта
+                  </Link>
+                </div>
               </Description>
             </div>
 
-            <Button type="submit" className="w-full !bg-[#E60000]">
+            <Button type="submit" className="w-full !bg-[#E60000] mt-4">
               Подтвердить заказ
             </Button>
           </div>
 
           {/* ORDER SUMMARY */}
-          <div className="bg-white border rounded-[12px] w-full md:w-[550px] h-full p-6">
+          <div className="bg-white border rounded-[12px] w-full h-full md:w-[480px] p-6">
             {cart.map((el, i) => (
               <div key={i} className="border-b pb-3 mb-3">
                 <Description>{el.product_name}</Description>
-                <Description>
-                  {(el.discount || el.price) * el.quantity} c
-                </Description>
                 <Description>
                   {el.quantity} × {el.discount || el.price} c
                 </Description>
@@ -242,24 +251,24 @@ const Design = () => {
         </form>
       </div>
 
-      {/* Success Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-[16px] md:w-[380px] w-[90%]">
-            <div className="w-full flex justify-between">
-              <Title className="!text-[20px]">Вы успешно оформили заказ!</Title>
+            <div className="flex justify-between items-center">
+              <Title className="!text-[18px]">Вы успешно оформили заказ!</Title>
               <button onClick={() => setIsOpen(false)}>
                 <IoMdClose />
               </button>
             </div>
+
             <Description className="mt-4">
-              В скором времени менеджер свяжется с Вами!
+              В скором времени менеджер свяжется с вами.
             </Description>
 
             <Button className="mt-4 w-full">
               <Link
-                className="w-full h-full flex items-center justify-center"
                 href="/"
+                className="w-full h-full flex items-center justify-center"
               >
                 Продолжить
               </Link>

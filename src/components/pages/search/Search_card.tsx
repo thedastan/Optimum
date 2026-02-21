@@ -17,6 +17,7 @@ import { IProduct } from "@/redux/models/product.model";
 import { toast } from "alert-go";
 import "alert-go/dist/notifier.css";
 import { useEffect, useState } from "react";
+import { PHONE_NUMBER_LINK } from "@/constants/admin";
 
 const Search_card = () => {
   const { data, isLoading } = useProducts();
@@ -87,7 +88,13 @@ const Search_card = () => {
                 Запчасти «{query}» пока нет в каталоге. Свяжитесь с нами, и мы
                 подберем её для вас!
               </Description>
-              <Button className="!w-[150px]">Связаться</Button>
+              <Link
+                target="_blank"
+                href={PHONE_NUMBER_LINK}
+                className="!w-[110px]"
+              >
+                <Button className="!w-[110px]">Связаться</Button>
+              </Link>
             </div>
           </div>
         )}
@@ -168,7 +175,9 @@ const Search_card = () => {
                         )}
                       </div>
 
-                      <Description>АРТИКУЛ: {el.article}</Description>
+                      <Description className="!text-[12px]">
+                        АРТИКУЛ: {el.article}
+                      </Description>
                     </div>
 
                     <Button

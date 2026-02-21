@@ -14,6 +14,9 @@ import { useProducts } from "@/redux/hooks/product";
 import Link from "next/link";
 import { addToCart, getCart } from "@/components/shared/utils/cartStorage";
 import { useRouter } from "next/navigation";
+import { PHONE_NUMBER_LINK } from "@/constants/admin";
+import { IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
+import { IoArrowBackSharp, IoArrowForwardOutline } from "react-icons/io5";
 
 interface Props {
   filters: {
@@ -27,28 +30,27 @@ interface Props {
 const Catalog_card: React.FC<Props> = ({ filters }) => {
   const { data, isLoading } = useProducts();
   const [cart, setCart] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; // показываем 6 товаров на страницу
   const router = useRouter();
 
   useEffect(() => {
     setCart(getCart());
   }, []);
 
-  // ✅ Skeleton пока грузится
+  // Skeleton пока грузится
   if (isLoading) {
     return (
       <section>
         <div className="container">
           <TitleComponent className="py-4">Все товары</TitleComponent>
-
           <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-[22px]">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="animate-pulse flex flex-col gap-[14px]">
                 <div className="w-full h-[157px] bg-gray-200 rounded-[20px]" />
-
                 <div className="h-[14px] bg-gray-200 rounded w-3/4" />
                 <div className="h-[14px] bg-gray-200 rounded w-1/2" />
                 <div className="h-[14px] bg-gray-200 rounded w-2/3" />
-
                 <div className="h-[40px] bg-gray-200 rounded-[8px]" />
               </div>
             ))}
@@ -60,27 +62,23 @@ const Catalog_card: React.FC<Props> = ({ filters }) => {
 
   if (!data) return null;
 
-  // ✅ ФИЛЬТРАЦИЯ
+  // ФИЛЬТРАЦИЯ
   const filteredProducts = data.filter((el) => {
     if (filters.selectedMarka && el.brand.brand_name !== filters.selectedMarka)
       return false;
-
     if (filters.selectedModel && el.model.model_name !== filters.selectedModel)
       return false;
-
     if (filters.selectedKuzov && el.body.type_name !== filters.selectedKuzov)
       return false;
-
     if (
       filters.selectedTypes.length > 0 &&
       !filters.selectedTypes.includes(el.parts.spare_name)
     )
       return false;
-
     return true;
   });
 
-  // ✅ Сортировка
+  // Сортировка
   const sortedProducts = [...filteredProducts].sort((a, b) =>
     a.product_name.localeCompare(b.product_name),
   );
@@ -95,11 +93,20 @@ const Catalog_card: React.FC<Props> = ({ filters }) => {
           <Description className="!text-[14px]">
             Свяжитесь с нами для заказа
           </Description>
-          <Button className="!w-[120px]">Связаться</Button>
+          <Link target="_blank" href={PHONE_NUMBER_LINK} className="!w-[110px]">
+            <Button className="!w-[110px]">Связаться</Button>
+          </Link>
         </div>
       </div>
     );
   }
+
+  // ПАГИНАЦИЯ
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const paginatedProducts = sortedProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   return (
     <section>
@@ -107,7 +114,7 @@ const Catalog_card: React.FC<Props> = ({ filters }) => {
         <TitleComponent className="py-4">Все товары</TitleComponent>
 
         <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-[22px]">
-          {sortedProducts.map((el, i) => {
+          {paginatedProducts.map((el, i) => {
             const isInCart = cart.some((item) => item.id === el.id);
             return (
               <Link
@@ -174,7 +181,9 @@ const Catalog_card: React.FC<Props> = ({ filters }) => {
                     )}
                   </div>
 
-                  <Description>АРТИКУЛ: {el.article}</Description>
+                  <Description className="!text-[12px]">
+                    АРТИКУЛ: {el.article}
+                  </Description>
                 </div>
 
                 <Button
@@ -211,6 +220,46 @@ const Catalog_card: React.FC<Props> = ({ filters }) => {
             );
           })}
         </div>
+
+        {/* Навигация по страницам */}
+        {/* Навигация по страницам */}
+        {totalPages > 1 && (
+          <div className="flex justify-between items-center gap-2 mt-6">
+            <Button
+              className="w-[100px] bg-white !text-black flex items-center gap-2 border hover:bg-black hover:!text-white"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            >
+              <IoArrowBackSharp /> Previous
+            </Button>
+
+            <div className="flex gap-2">
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <button
+                  key={index}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === index + 1
+                      ? "bg-[#FAFAFA] text-black"
+                      : "bg-white text-[#000]"
+                  }`}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+
+            <Button
+              className="w-[100px] bg-white !text-black flex items-center gap-2 border hover:bg-black hover:!text-white"
+              disabled={currentPage === totalPages}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+            >
+              Next <IoArrowForwardOutline />
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
