@@ -38,7 +38,7 @@ const MobileBottomNav = () => {
   }, []);
 
   return (
-    <div className="flex bg-white p-3 z-50 justify-between border-t sticky bottom-0 left-0">
+    <div className="flex md:hidden bg-white p-3 z-50 justify-between border-t sticky bottom-0 left-0">
       <Link href={PAGE.HOME}>
         <button className="relative w-[40px] h-[40px] text-[25px] border rounded-[8px] flex items-center justify-center">
           <GoHome />
