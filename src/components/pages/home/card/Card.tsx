@@ -66,6 +66,8 @@ const Card = () => {
                     <div className="relative w-full">
                       <Swiper
                         modules={[Pagination]}
+                        watchSlidesProgress={true} // Ускоряет расчеты
+                        updateOnWindowResize={false}
                         pagination={{
                           clickable: true,
                           el: `.custom-pagination-${i}`,
@@ -83,7 +85,9 @@ const Card = () => {
                                 width={300}
                                 height={200}
                                 className="object-cover w-full h-full"
-                                priority={idx === 0}
+                                priority={i < 4 && idx === 0}
+                                unoptimized
+                                sizes="(max-width: 768px) 50vw, 16vw"
                               />
                             </div>
                           </SwiperSlide>

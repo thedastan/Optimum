@@ -58,13 +58,23 @@ const Brand = () => {
               key={index}
               className="w-full h-[120px] border rounded-[8px] flex flex-col justify-center items-center gap-[8px] p-2"
             >
-              <Image
+              {/* <Image
                 src={el.img}
                 alt={el.text}
                 width={48} // фиксированный размер для SVG
                 height={48}
                 priority={index < 6} // грузим первые 6 картинок сразу
+              /> */}
+
+              <Image
+                src={el.img}
+                alt={el.text}
+                width={48}
+                height={48}
+                priority={index < 12} // Можно увеличить до 12, если это "первый экран"
+                unoptimized // Для SVG это ускоряет процесс, так как не тратится время на обработку
               />
+
               <Title className="text-[12px] text-center">{el.text}</Title>
             </div>
           ))}
