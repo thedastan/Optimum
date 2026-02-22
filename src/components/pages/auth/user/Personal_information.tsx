@@ -1,8 +1,9 @@
+"use client";
+
 import Button from "@/components/ui/button/Button";
 import { Description } from "@/components/ui/text/Description";
 import { TitleComponent } from "@/components/ui/text/TitleComponent";
 import { useEditProfile, useMyData } from "@/redux/hooks/auth";
-import { useOrders } from "@/redux/hooks/order";
 import React, { useEffect, useState } from "react";
 
 import PhoneInput from "phone-go";
@@ -12,10 +13,9 @@ import { toast } from "alert-go";
 import "alert-go/dist/notifier.css";
 
 const Personal_information = () => {
-  const [isSend, setIsSend] = useState(false);
+  // const [isSend, setIsSend] = useState(false);
 
-  const { data, isPending } = useMyData();
-
+  const { data } = useMyData();
   const { mutate, isPending: updating } = useEditProfile();
 
   const [form, setForm] = useState({
@@ -37,32 +37,39 @@ const Personal_information = () => {
   }, [data]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSave = () => {
     mutate(form, {
       onSuccess: () => {
-        setIsSend(true);
+        // setIsSend(true);
+        toast.success("Данные успешно изменены", {
+          position: "top-center",
+        });
       },
     });
   };
 
   return (
-    <div className="">
-      {isSend && (
+    <div>
+      {/* {isSend && (
         <div className="rounded-[8px] bg-[#FFF9F5] text-[#D95700] text-[14px] px-4 py-2 mt-4">
           На вашу почту была отправлена ссылка для подтверждения. Пожалуйста
           подтвердите почту
         </div>
-      )}
+      )} */}
 
       <div className="w-full py-4">
         <TitleComponent>Личная информация</TitleComponent>
         <Description className="mt-[22px]">
-          Вы можете поменять фио, номер телефона и номер WhatsApp
+          Вы можете поменять ФИО, номер телефона и номер WhatsApp
         </Description>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-[22px]">
         <div>
           <Description>ФИО</Description>
@@ -74,23 +81,23 @@ const Personal_information = () => {
             className="border p-2 rounded-[8px] outline-none w-full h-[40px] mt-1"
           />
         </div>
-        <div className=" ">
+
+        <div>
           <Description>Номер телефона</Description>
           <PhoneInput
             className="my-phone-input mt-1"
             value={form.phone_number}
-            onChange={(value) => setForm({ ...form, phone_number: value })}
+            onChange={(value: string) =>
+              setForm((prev) => ({
+                ...prev,
+                phone_number: value,
+              }))
+            }
             defaultCountry="KG"
             placeholder="Телефон"
           />
-          {/* <input
-            name="phone_number"
-            value={form.phone_number}
-            onChange={handleChange}
-            placeholder="Номер телефона"
-            className="border p-2 rounded-[8px] outline-none w-full h-[40px] mt-1"
-          /> */}
         </div>
+
         <div>
           <Description>Email</Description>
           <input
@@ -101,24 +108,31 @@ const Personal_information = () => {
             className="border p-2 rounded-[8px] outline-none w-full h-[40px] mt-1"
           />
         </div>
+
         <div>
           <Description>Номер WhatsApp (необязательно)</Description>
-          <input
-            name="whatsapp"
+          <PhoneInput
+            className="my-phone-input mt-1"
             value={form.whatsapp}
-            onChange={handleChange}
+            onChange={(value: string) =>
+              setForm((prev) => ({
+                ...prev,
+                whatsapp: value,
+              }))
+            }
+            defaultCountry="KG"
             placeholder="Номер WhatsApp"
-            className="border p-2 rounded-[8px] outline-none w-full h-[40px] mt-1"
           />
         </div>
       </div>
+
       <div className="w-full flex justify-end mt-[22px]">
         <Button
           onClick={handleSave}
           disabled={updating}
           className="md:w-[107px] w-full"
         >
-          {updating ? "Сохранение..." : "Сохранить"}
+          {updating ? "Сохранение" : "Сохранить"}
         </Button>
       </div>
     </div>

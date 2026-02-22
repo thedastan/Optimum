@@ -222,15 +222,15 @@ const Catalog_card: React.FC<Props> = ({ filters }) => {
         </div>
 
         {/* Навигация по страницам */}
-        {/* Навигация по страницам */}
         {totalPages > 1 && (
           <div className="flex justify-between items-center gap-2 mt-6">
             <Button
-              className="w-[100px] bg-white !text-black flex items-center gap-2 border hover:bg-black hover:!text-white"
+              className="md:!w-[110px] !w-[50px] bg-white !text-black text-[20px] md:text-[16px] flex items-center gap-2 border hover:bg-black hover:!text-white"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             >
-              <IoArrowBackSharp /> Previous
+              <IoArrowBackSharp />
+              <p className="hidden md:flex">Previous</p>
             </Button>
 
             <div className="flex gap-2">
@@ -250,13 +250,14 @@ const Catalog_card: React.FC<Props> = ({ filters }) => {
             </div>
 
             <Button
-              className="w-[100px] bg-white !text-black flex items-center gap-2 border hover:bg-black hover:!text-white"
+              className="md:!w-[100px] !w-[50px] bg-white !text-black text-[20px] md:text-[16px] flex items-center gap-2 border hover:bg-black hover:!text-white"
               disabled={currentPage === totalPages}
               onClick={() =>
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
             >
-              Next <IoArrowForwardOutline />
+              <p className="hidden md:flex">Next</p>
+              <IoArrowForwardOutline />
             </Button>
           </div>
         )}

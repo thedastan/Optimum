@@ -186,10 +186,16 @@ const Detail = () => {
                 <Title>Цена:</Title>
 
                 <div className="flex gap-2">
-                  <Title className="line-through text-[#747474]">
-                    {el.price} с
-                  </Title>
-                  <Title className="">{el.discount} с</Title>
+                  {el.discount > 0 ? (
+                    <>
+                      <Title className="line-through text-[#747474]">
+                        {el.price}с
+                      </Title>
+                      <Title>{el.discount}с</Title>
+                    </>
+                  ) : (
+                    <Title>{el.price}с</Title>
+                  )}
                 </div>
               </div>
 
