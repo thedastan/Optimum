@@ -83,6 +83,7 @@ const Card = () => {
                                 width={300}
                                 height={200}
                                 className="object-cover w-full h-full"
+                                priority={idx === 0}
                               />
                             </div>
                           </SwiperSlide>
